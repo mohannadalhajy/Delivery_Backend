@@ -1,0 +1,13 @@
+const express = require("express");
+const router = express.Router();
+const controller = require("../../controllers/Clients/Profile.Controller");
+const { verifyAccessToken } = require("../../helpers/jwt_helper");
+
+//Get a list of all KeyWords
+router.get("/profileMe", verifyAccessToken, controller.profileMe);
+router.post("/updatePassword", verifyAccessToken, controller.updatePassword);
+router.patch("/location", verifyAccessToken, controller.updateLocation);
+router.patch("/token", verifyAccessToken, controller.updateFirebaseToken);
+router.post("/updateEmail", verifyAccessToken, controller.updateEmail);
+
+module.exports = router;

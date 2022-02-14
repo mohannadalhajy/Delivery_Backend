@@ -1,0 +1,33 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.env
+# dependencies
+/node_modules
+/images
+/.pnp
+.pnp.js
+package-lock.json
+# testing
+/coverage
+
+# production
+
+# misc
+DriversImages
+ClientsImages
+.ssh
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+.htaccess
+yarn-debug.log*
+yarn-error.log*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.ebextensions/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

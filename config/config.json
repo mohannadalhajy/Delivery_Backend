@@ -1,0 +1,38 @@
+{
+  "ffff": {
+    "username": "root",
+    "password": "12345678",
+    "database": "sinbad_delivery",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "ff": {
+    "username": "admin",
+    "user": "admin",
+    "password": "AHMed&5501",
+    "database": "sinbaddelivery",
+    "host": "sinbaddeliverydb.cxapqnsytpcl.us-east-2.rds.amazonaws.com",
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": "Amazon RDS"
+    },
+    "maxConcurrentQueries": 100,
+    "port": 3306,
+    "pool": { "maxConnections": 5, "maxIdleTime": 30
+    },
+    "language": "en"
+  },
+  "development": {
+    "username": "sinbadAdmin",
+    "user": "sinbadAdmin",
+    "password": "mc@lk%ad*sm",
+    "database": "sinbaddeliverydb",
+    "host": "166.62.10.52",
+    "dialect": "mysql",
+    "maxConcurrentQueries": 100,
+    "port": 3306,
+    "pool": { "maxConnections": 5, "maxIdleTime": 30
+    },
+    "charset": "utf8"
+  }
+}
