@@ -5,6 +5,7 @@ const { verifyAccessToken } = require("../helpers/jwt_helper");
 
 //Get a list of all KeyWords
 router.post("/", verifyAccessToken, controller.add);
+router.post("/addFirstAdmin", controller.add);
 router.get("/", verifyAccessToken, controller.getAll);
 router.delete("/:id", verifyAccessToken, controller.delete);
 router.patch("/:id", verifyAccessToken, controller.update);
