@@ -197,11 +197,11 @@ const validation = async (record, arrayError, type) => {
       `addressEnglish is empty`,
       SERVER_ERRORS.CITY_EMPTY
     ))
-  if (!record.cityArabic)
+  if (!record.addressArabic)
     arrayError.push(new ErrorResponse(
       "createClient",
-      "cityArabic",
-      `cityArabic is empty`,
+      "addressArabic",
+      `addressArabic is empty`,
       SERVER_ERRORS.CITY_EMPTY
     ))
   if (!record.clientPhone)
