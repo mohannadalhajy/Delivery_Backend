@@ -166,18 +166,25 @@ module.exports = {
             arrayError,
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
             driverId
-            start_date
-            end_date
+            startDate
+            endDate
             status
           }))*/
-          record = { ...record, startDate: new Date(), status: 0 }
+          const customer = await models.customers.create({phone:record.customerPhone, nameEnglish: record.customerName}).then(result => {
+            return result
+          }).catch(error => {
+            console.log(error)
+            throw (error)
+          })
+          console.log("customer", customer)
+          record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
           const order = await model.create(record).then(result => {
             return result
           }).catch(error => {
             console.log(error)
             throw (error)
           })
-          module.exports.processDeliveryOrder(order, [])
+          //module.exports.processDeliveryOrder(order, [])
           resolve(new Response(true, order, {}));
         } catch (error) {
           reject(error)
@@ -273,6 +280,10 @@ module.exports = {
             {
               model: models.drivers,
               attributes: ['nickName']
+            },
+            {
+              model: models.customers,
+              attributes: [['nameEnglish','customerName'], ['nameArabic', 'customerNameArabic'], ['phone', 'customerPhone']]
             }],
           }).then(result => {
             if (result) {
@@ -280,7 +291,12 @@ module.exports = {
               result.companyNameArabic = result.client ? result.client.companyNameArabic : undefined;
               result.companyNameEnglish = result.client ? result.client.companyNameEnglish : undefined;
               delete result['client'];
-              result.driverName = result.driver ? result.driver.nickName : undefined; delete result['driver'];
+              result.driverName = result.driver ? result.driver.nickName : undefined;
+              delete result['driver'];
+              result.customerName = result.customer ? result.customer.dataValues.customerName : undefined;
+              result.customerPhone = result.customer ? result.customer.dataValues.customerPhone : undefined;
+              result.customerNameArabic = result.customer ? result.customer.dataValues.customerNameArabic : undefined;
+              delete result['customer'];
               return (new Response(true, result, {}))
             }
             else throw (
