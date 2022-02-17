@@ -170,14 +170,15 @@ module.exports = {
             endDate
             status
           }))*/
-          const customer = await models.customers.create({phone:record.customerPhone, nameEnglish: record.customerName}).then(result => {
-            return result
-          }).catch(error => {
-            console.log(error)
-            throw (error)
-          })
-          console.log("customer", customer)
-          record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
+          if (record.customerPhone) {
+            const customer = await models.customers.create({ phone: record.customerPhone, nameEnglish: record.customerName }).then(result => {
+              return result
+            }).catch(error => {
+              console.log(error)
+              throw (error)
+            })
+            record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
+          }
           const order = await model.create(record).then(result => {
             return result
           }).catch(error => {
@@ -204,12 +205,12 @@ module.exports = {
             await sendNewOrderNotification(driver.firebaseToken, notificationId)
             setTimeout(function () {
               const promise = module.exports.findBaseById(order.id)
-              promise.then(res =>{
+              promise.then(res => {
                 const currentOrder = res.result
-                if(currentOrder.status===0){
+                if (currentOrder.status === 0) {
                   expiredStatusChange(orderNotifiction.result)
                   blockedDrivers.push(driver.id)
-                  module.exports.processDeliveryOrder(currentOrder,blockedDrivers)
+                  module.exports.processDeliveryOrder(currentOrder, blockedDrivers)
                   module.exports.deliverOldestOrder(currentOrder.id)
                 }
               })
@@ -229,15 +230,16 @@ module.exports = {
           const orders = await model.findAll({
             where: {
               status: 0,
-              id:{ [Op.ne]: blockedOrder },
+              id: { [Op.ne]: blockedOrder },
             }
           })
           if (orders.length === 0)
             resolve(new Response(true, {}, {}));
           else {
-          const order = orders[0]
-          module.exports.processDeliveryOrder(order,[])
-          resolve(new Response(true, order, {}));}
+            const order = orders[0]
+            module.exports.processDeliveryOrder(order, [])
+            resolve(new Response(true, order, {}));
+          }
         } catch (error) {
           reject(error)
         }
@@ -283,7 +285,7 @@ module.exports = {
             },
             {
               model: models.customers,
-              attributes: [['nameEnglish','customerName'], ['nameArabic', 'customerNameArabic'], ['phone', 'customerPhone']]
+              attributes: [['nameEnglish', 'customerName'], ['nameArabic', 'customerNameArabic'], ['phone', 'customerPhone']]
             }],
           }).then(result => {
             if (result) {
