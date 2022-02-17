@@ -1,10 +1,10 @@
 const createError = require("http-errors");
-const models = require("../../models");
+const models = require("../models");
 const {
   Response, ErrorResponse,
-} = require("../../helpers/Response.Helper");
-const SERVER_ERRORS = require("../../helpers/ServerErrors.Helper");
-const { getEmirates } = require("../../helpers/Constants");
+} = require("../helpers/Response.Helper");
+const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
+// const { getEmirates } = require("../helpers/Constants");
 const model = models.customers
 const validation = async (record, arrayError, type, clientId) => {
   if (!record) {

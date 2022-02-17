@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../../controllers/Clients/Customers.Controller");
+const controller = require("../controllers/Customers.Controller");
 const multer = require("multer");
 const path = require('path');
-const { verifyAccessToken } = require("../../helpers/jwt_helper");
+const { verifyAccessToken } = require("../helpers/jwt_helper");
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'ClientsImages');

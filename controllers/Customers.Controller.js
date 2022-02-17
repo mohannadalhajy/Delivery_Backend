@@ -1,6 +1,6 @@
-const { getRecordsCountInPage } = require("../../helpers/Constants");
-const { Response } = require("../../helpers/Response.Helper");
-const services = require("../../services/Clients/Customers.Service");
+const { getRecordsCountInPage } = require("../helpers/Constants");
+const { Response } = require("../helpers/Response.Helper");
+const services = require("../services/Customers.Service");
 
 module.exports = {
   getAll: async (req, res, next) => {
