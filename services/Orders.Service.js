@@ -185,7 +185,7 @@ module.exports = {
             console.log(error)
             throw (error)
           })
-          //module.exports.processDeliveryOrder(order, [])
+          module.exports.processDeliveryOrder(order, [])
           resolve(new Response(true, order, {}));
         } catch (error) {
           reject(error)
