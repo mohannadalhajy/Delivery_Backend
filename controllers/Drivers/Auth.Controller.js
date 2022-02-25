@@ -11,6 +11,16 @@ module.exports = {
       next(error);
     }
   },
+  register: async (req, res, next) => {
+    try {
+      const record = req.body
+      const result = await services.register(record)
+      res.send(result)
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
   logout: async (req, res, next) => {
     try {
       const id = req.payload.user.id
