@@ -13,6 +13,8 @@ package-lock.json
 # misc
 DriversImages
 ClientsImages
+DriversImages
+OffersImages/
 .ssh
 .DS_Store
 .env.local

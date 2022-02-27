@@ -10,6 +10,7 @@ const app = express();
 require('./models/index.js') 
 const clientsRoute = require('./routes/Clients.Router')
 const ordersRoute = require('./routes/Orders.Router')
+const offersRoute = require('./routes/Offers.Router')
 const usersRoute = require('./routes/Users.Router')
 const authRoute = require('./routes/Auth.Router')
 const profileRoute = require('./routes/Profile.Route')
@@ -34,6 +35,10 @@ const dir2 = './DriversImages';
 if (!fs.existsSync(dir2)) {
   fs.mkdirSync(dir2);
 }
+const dir3 = './OffersImages';
+if (!fs.existsSync(dir3)) {
+  fs.mkdirSync(dir3);
+}
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
@@ -54,8 +59,10 @@ app.use(function (req, res, next) {
 });
 app.use('/clientsImages', express.static('ClientsImages'));
 app.use('/driversImages', express.static('DriversImages'));
+app.use('/offersImages', express.static('OffersImages'));
 app.use('/clients',clientsRoute)
 app.use('/orders',ordersRoute)
+app.use('/offers',offersRoute)
 app.use('/drivers',driversRoute)
 app.use('/driverVehicles',driverVehiclesRoute)
 app.use('/users',usersRoute)
