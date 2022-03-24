@@ -13,10 +13,6 @@ const define= {
   collate: 'utf8_general_ci', 
   timestamps: true
 }
-//"username": "admin",
-//"password": "AHMed&5501",
-//"username": "AKIAXXHPKPQOUSZ3RI2V",
-//"password": "83g42QbJ20RJDwtROUWxrsI9bu5PGN3waE3/kPZR"
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
