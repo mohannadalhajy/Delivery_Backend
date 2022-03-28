@@ -1,8 +1,8 @@
 {
-  "ffff": {
+  "developmentLocal": {
     "username": "root",
-    "password": "12345678",
-    "database": "sinbad_delivery",
+    "password": "",
+    "database": "deliverydb",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

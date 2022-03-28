@@ -275,13 +275,13 @@ module.exports = {
           const result = await model.findAll(
             {
               attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'],
-              include: [{
-                attributes: [],
-                model: models.drivers_vehicles,
-                where: {
-                  endDate: null
-                }
-              }]
+              // include: [{
+              //   attributes: [],
+              //   model: models.drivers_vehicles,
+              //   where: {
+              //     endDate: null
+              //   }
+              // }]
             }
           ).then(result => {
             if (result.length) return (new Response(true, { result }, {}))
@@ -308,13 +308,13 @@ module.exports = {
           const result = await model.findAll(
             {
               attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'],
-              include: [{
-                attributes: ['endDate'],
-                model: models.drivers_vehicles
-              }]
+              // include: [{
+              //   attributes: ['endDate'],
+              //   model: models.drivers_vehicles
+              // }]
             }
           ).then(result => {
-            if (result.length) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
+            // if (result.length) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
             if (result.length) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({

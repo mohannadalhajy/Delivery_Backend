@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       models.drivers.hasMany(models.orders, {foreignKey: 'driverId', targetKey: 'id'})
       models.drivers.hasMany(models.orders_notifications, {foreignKey: 'driverId', targetKey: 'id'})
       models.drivers.hasMany(models.drivers_statuses, {foreignKey: 'driverId', targetKey: 'id'})
-      models.drivers.hasMany(models.drivers_vehicles, {foreignKey: 'driverId', targetKey: 'id'})
-    
+      // models.drivers.hasMany(models.drivers_vehicles, {foreignKey: 'driverId', targetKey: 'id'})
     }
   };
   drivers.init({
