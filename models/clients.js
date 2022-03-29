@@ -13,14 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.clients.hasMany(models.orders, {foreignKey: 'clientId', targetKey: 'id'})
       models.clients.hasMany(models.clients_charges, {foreignKey: 'clientId', targetKey: 'id'})
-      // models.clients.hasMany(models.customers, {foreignKey: 'clientId', targetKey: 'id'})  
+      models.clients.hasMany(models.customers, {foreignKey: 'clientId', targetKey: 'id'})  
     }
   };
   clients.init({
     companyNameEnglish: DataTypes.TEXT,
     companyNameArabic: DataTypes.TEXT,
-    // userName: DataTypes.TEXT,
-    // password: DataTypes.TEXT,
+    userName: DataTypes.TEXT,
+    password: DataTypes.TEXT,
     clientNameEnglish: DataTypes.TEXT,
     clientNameArabic: DataTypes.TEXT,
     emirate: DataTypes.INTEGER,

@@ -17,54 +17,54 @@ const validation = async (record, arrayError, type) => {
     ))
     return;
   }
-  // if (!record.userName) {
-  //   arrayError.push(new ErrorResponse(
-  //     "createClient",
-  //     "userName",
-  //     `userName is empty`,
-  //     SERVER_ERRORS.USER_NAME_EMPTY
-  //   ))
-  //   return;
-  // }
+  if (!record.userName) {
+    arrayError.push(new ErrorResponse(
+      "createClient",
+      "userName",
+      `userName is empty`,
+      SERVER_ERRORS.USER_NAME_EMPTY
+    ))
+    return;
+  }
   const recordCheck = await model.findByPk(record.id).then(result => {
     return result
   }).catch(error => {
     return 0
   })
-  // if (type === "edit") {
-  //   if (recordCheck) {
-  //     if (recordCheck.userName !== record.userName) {
-  //       let count = await model.count({ where: { 'userName': record.userName } })
-  //         .then(counter => { return counter }).catch(error => {
-  //           return 0
-  //         })
-  //       if (count) {
-  //         arrayError.push(new ErrorResponse(
-  //           "createClient",
-  //           "userName",
-  //           `userName is exist already`,
-  //           SERVER_ERRORS.RECORD_IS_EXIST_ALREADY
-  //         ))
-  //         return;
-  //       }
-  //     }
-  //   }
-  // }
-  // else {
-  //   let count = await model.count({ where: { 'userName': record.userName } })
-  //     .then(counter => { return counter }).catch(error => {
-  //       return 0
-  //     })
-  //   if (count) {
-  //     arrayError.push(new ErrorResponse(
-  //       "createClient",
-  //       "userName",
-  //       `userName is exist already`,
-  //       SERVER_ERRORS.RECORD_IS_EXIST_ALREADY
-  //     ))
-  //     return;
-  //   }
-  // }
+  if (type === "edit") {
+    if (recordCheck) {
+      if (recordCheck.userName !== record.userName) {
+        let count = await model.count({ where: { 'userName': record.userName } })
+          .then(counter => { return counter }).catch(error => {
+            return 0
+          })
+        if (count) {
+          arrayError.push(new ErrorResponse(
+            "createClient",
+            "userName",
+            `userName is exist already`,
+            SERVER_ERRORS.RECORD_IS_EXIST_ALREADY
+          ))
+          return;
+        }
+      }
+    }
+  }
+  else {
+    let count = await model.count({ where: { 'userName': record.userName } })
+      .then(counter => { return counter }).catch(error => {
+        return 0
+      })
+    if (count) {
+      arrayError.push(new ErrorResponse(
+        "createClient",
+        "userName",
+        `userName is exist already`,
+        SERVER_ERRORS.RECORD_IS_EXIST_ALREADY
+      ))
+      return;
+    }
+  }
 
   if (!record.companyNameEnglish) {
     arrayError.push(new ErrorResponse(
@@ -152,13 +152,13 @@ const validation = async (record, arrayError, type) => {
       return;
     }
   }
-  // if (!record.password)
-  //   arrayError.push(new ErrorResponse(
-  //     "createClient",
-  //     "password",
-  //     `password is empty`,
-  //     SERVER_ERRORS.PASSWORD_EMPTY
-  //   ))
+  if (!record.password)
+    arrayError.push(new ErrorResponse(
+      "createClient",
+      "password",
+      `password is empty`,
+      SERVER_ERRORS.PASSWORD_EMPTY
+    ))
   const RENumber = /^\d+(\.\d+){0,1}$/
   if (!record.clientNameEnglish)
     arrayError.push(new ErrorResponse(
@@ -561,8 +561,8 @@ module.exports = {
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
           const salt = await bcrypt.genSalt(10)
-          // const hashPassword = await bcrypt.hash(record.password, salt);
-          // record.password = hashPassword
+          const hashPassword = await bcrypt.hash(record.password, salt);
+          record.password = hashPassword
           const result = await model.create(record).then(result => {
             return (new Response(true, result, {}))
           }).catch(error => {
