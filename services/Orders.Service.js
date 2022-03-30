@@ -160,6 +160,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
+
           /*const arrayError = []
           await validation(record, arrayError, "add")
           if (arrayError.length) throw (createError.Conflict({
@@ -170,22 +171,23 @@ module.exports = {
             endDate
             status
           }))*/
-          if (record.customerPhone) {
-            const customer = await models.customers.create({ phone: record.customerPhone, nameEnglish: record.customerName }).then(result => {
-              return result
-            }).catch(error => {
-              console.log(error)
-              throw (error)
-            })
-            record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
-          }
+          // if (record.customerPhone) {
+          //   const customer = await models.customers.create({ phone: record.customerPhone, nameEnglish: record.customerName }).then(result => {
+          //     return result
+          //   }).catch(error => {
+          //     console.log(error)
+          //     throw (error)
+          //   })
+          //   record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
+          // }
+          record = { ...record, startDate: new Date(), status: 0 }
           const order = await model.create(record).then(result => {
             return result
           }).catch(error => {
             console.log(error)
             throw (error)
           })
-          module.exports.processDeliveryOrder(order, [])
+          //module.exports.processDeliveryOrder(order, [])
           resolve(new Response(true, order, {}));
         } catch (error) {
           reject(error)

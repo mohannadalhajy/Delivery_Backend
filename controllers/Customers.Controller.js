@@ -54,7 +54,7 @@ module.exports = {
   },
   getNames: async (req, res, next) => {
     try {
-      const clientId = req.payload.user.id
+      const clientId = req.params.clientId?req.params.clientId:req.payload.user.id
       const result = await services.getNames(clientId)
       res.send(result)
     } catch (error) {
@@ -103,7 +103,7 @@ module.exports = {
   },
   add: async (req, res, next) => {
     try {
-      const clientId = req.payload.user.id
+      const clientId = req.body.clientId?req.body.clientId:req.payload.user.id
       const record = req.body
       const result = await services.add(record, clientId)
       res.send(result)

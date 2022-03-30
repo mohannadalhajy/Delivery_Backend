@@ -250,7 +250,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findAll({ attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'] }).then(result => {
+          const result = await model.findAll({ attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName', 'status'] }).then(result => {
             if (result.length) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({

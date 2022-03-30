@@ -24,7 +24,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/", verifyAccessToken, controller.add);
 router.get("/", verifyAccessToken, controller.getAll);
 router.get("/client", verifyAccessToken, controller.getAllToClient);
-router.get("/names", verifyAccessToken, controller.getNames);
+router.get("/names/:clientId", verifyAccessToken, controller.getNames);
 router.get("/orders/:id", verifyAccessToken, controller.getOrders);
 router.delete("/deleteAll", verifyAccessToken, controller.deleteAll);
 router.post("/deleteGroup", verifyAccessToken, controller.deleteGroup);

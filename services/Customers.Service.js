@@ -148,7 +148,10 @@ module.exports = {
           let pageCount = Math.ceil(count / recordsInPage);
           const result = await model.findAll({
             limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage
+            offset: (requestedPage - 1) * recordsInPage,
+            include: [{
+              model: models.clients
+            }]
           }).then(result => {
             if (result.length) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
@@ -172,7 +175,7 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({
-            where:{clientId},
+            where: { clientId },
             attributes: ['id', 'nameEnglish', 'nameArabic']
           }).then(result => {
             if (result.length) return (new Response(true, { result }, {}))
@@ -196,13 +199,13 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let count = await model.count({where:{clientId}})
+          let count = await model.count({ where: { clientId } })
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
           let pageCount = Math.ceil(count / recordsInPage);
           const result = await model.findAll({
-            where:{clientId},
+            where: { clientId },
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
@@ -227,7 +230,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const count = await models.orders.count({ where:{customerId: id} })
+          const count = await models.orders.count({ where: { customerId: id } })
           const result = await model.findAll({
             where: { id },
             include: [{
