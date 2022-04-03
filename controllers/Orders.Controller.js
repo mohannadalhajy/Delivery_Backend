@@ -7,11 +7,12 @@ module.exports = {
     try {
       let requestedPage = req.query.page;
       let recordsInPage = req.query.take;
+      let type = req.query.type;
       if (requestedPage == null || requestedPage <= 0) requestedPage = 1;
       requestedPage = parseInt(requestedPage)
       if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
       recordsInPage = parseInt(recordsInPage)
-      const result = await services.getAll(requestedPage, recordsInPage)
+      const result = await services.getAll(requestedPage, recordsInPage, type)
       res.send(result)
     } catch (error) {
       console.log(error.message);
@@ -51,6 +52,17 @@ module.exports = {
       const id = req.params.id;
       const newRecord = req.body
       const result = await services.update(id, newRecord)
+      res.send(result)
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
+  updateDriver: async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const newRecord = req.body
+      const result = await services.updateDriver(id, newRecord)
       res.send(result)
     } catch (error) {
       console.log(error.message);

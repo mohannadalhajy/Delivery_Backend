@@ -122,7 +122,7 @@ module.exports = {
       (async ()=>{
         try{
           updateStatus(id, 2)
-          resolve(new Response(true, { accessToken, driver }));
+          resolve(new Response(true, {}));
         } catch(error){
           reject(error)
         }

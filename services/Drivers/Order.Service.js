@@ -7,7 +7,7 @@ const NotificationsService = require("../Notifications.Service");
 const OrderService = require("../Orders.Service");
 const { sendCancelOrderNotification, sendNewOrderNotification } = require("../../firebase/notifications");
 const { updateStatus } = require("./Profile.Service");
-const { processDeliveryOrder } = require("../Orders.Service");
+// const { processDeliveryOrder } = require("../Orders.Service");
 const model = models.orders
 const getNotification = async (id) => {
   const result = await OrdersNotificationsService.findById(id)
@@ -220,8 +220,8 @@ module.exports = {
         try {
           const orderNotifiction = await getNotification(record.id)
           const order = await getOrder(orderNotifiction.orderId)
-          await rejectStatusChange(orderNotifiction, record.reason)
-          processDeliveryOrder(order,[orderNotifiction.driverId])
+          rejectStatusChange(orderNotifiction, record.reason)
+          //processDeliveryOrder(order,[orderNotifiction.driverId])
           resolve(new Response(true, {}, {}));
         } catch (error) {
           reject(error)

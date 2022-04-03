@@ -24,6 +24,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/", verifyAccessToken, controller.add);
 router.get("/", verifyAccessToken, controller.getAll);
 router.delete("/:id", verifyAccessToken, controller.delete);
+router.patch("/driver/:id", verifyAccessToken, controller.updateDriver);
 router.patch("/:id", verifyAccessToken, controller.update);
 router.get("/:id", verifyAccessToken, controller.findById);
 module.exports = router;

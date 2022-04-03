@@ -3,32 +3,32 @@ const models = require("../models");
 const { Response } = require("../helpers/Response.Helper");
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
 const { sendNewOrderNotification } = require("../firebase/notifications");
-const { findAppropriateDriver } = require("./Drivers.Service");
+// const { findAppropriateDriver } = require("./Drivers.Service");
 const NotificationsService = require("./Notifications.Service");
 const Op = require('sequelize').Op;
 const ClientsService = require("./Clients.Service");
 const validation = async (order, arrayError) => {
 }
 const model = models.orders
-const expiredStatusChange = async (orderNotifiction) => {
-  orderNotifiction.status = 5
-  await orderNotifiction.save()
-}
-const getClient = async (id) => {
-  const result = await ClientsService.findById(id)
-  return result.result
-}
+// const expiredStatusChange = async (orderNotifiction) => {
+//   orderNotifiction.status = 5
+//   await orderNotifiction.save()
+// }
+// const getClient = async (id) => {
+//   const result = await ClientsService.findById(id)
+//   return result.result
+// }
 module.exports = {
-  getAll: async (requestedPage, recordsInPage) => {
+  getAll: async (requestedPage, recordsInPage, type) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let count = await model.count()
+          let count = await model.count(type?{ where: { status: type } }:{})
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
           let pageCount = Math.ceil(count / recordsInPage);
-          const result = await model.findAll({
+          const options = {
             include: [{
               model: models.clients,
               attributes: ['companyNameEnglish', 'companyNameArabic']
@@ -42,28 +42,29 @@ module.exports = {
             ],
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
-          }).then(result => {
-            if (result.length) {
-              result = result.map(record => record.dataValues)
-              result = result.map(record => {
-                record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
-                record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
-                delete record['client'];
-                record.driverName = record.driver ? record.driver.nickName : undefined;
-                delete record['driver'];
-                return record;
-              })
-              return (new Response(true, { result, count, pageCount }, {}))
-            }
-            else throw (
-              createError.NotFound({
-                error: new Response(false, {}, "There is no orders"),
-                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
-              })
-            )
-          }).catch(error => {
-            throw (error)
-          })
+          }
+          const result = await model.findAll(type?{...options,where: { status: type }}:options).then(result => {
+              if (result.length) {
+                result = result.map(record => record.dataValues)
+                result = result.map(record => {
+                  record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
+                  record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
+                  delete record['client'];
+                  record.driverName = record.driver ? record.driver.nickName : undefined;
+                  delete record['driver'];
+                  return record;
+                })
+                return (new Response(true, { result, count, pageCount }, {}))
+              }
+              else throw (
+                createError.NotFound({
+                  error: new Response(false, {}, "There is no orders"),
+                  code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+                })
+              )
+            }).catch(error => {
+              throw (error)
+            })
           resolve(result);
         } catch (error) {
           reject(error)
@@ -156,11 +157,34 @@ module.exports = {
       })()
     })
   },
+  updateDriver: async (id, newRecord) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          let result = await model.update({driverId:newRecord.driverId}, { where: { id } }).then(result => {
+            if (result[0]) return (new Response(true, newRecord, {}))
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "Order not found"),
+                code: SERVER_ERRORS.RECORD_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
+          result = await module.exports.findById(id)
+          await module.exports.processDeliveryOrder(id, newRecord.driverId)
+          resolve(new Response(true, result.result, {}));
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
   add: async (record) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-
           /*const arrayError = []
           await validation(record, arrayError, "add")
           if (arrayError.length) throw (createError.Conflict({
@@ -187,7 +211,7 @@ module.exports = {
             console.log(error)
             throw (error)
           })
-          //module.exports.processDeliveryOrder(order, [])
+          //module.exports.processDeliveryOrder(order)
           resolve(new Response(true, order, {}));
         } catch (error) {
           reject(error)
@@ -195,36 +219,53 @@ module.exports = {
       })()
     })
   },
-  processDeliveryOrder: async (order, blockedDrivers) => {
+  processDeliveryOrder: async (orderId, driverId) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const client = await getClient(order.clientId)
-          const driver = await findAppropriateDriver(order, blockedDrivers, client)
+          // const driver = await 
           if (driver) {
-            const orderNotifiction = await NotificationsService.add({ driverId: driver.id, orderId: order.id })
+            const orderNotifiction = await NotificationsService.add({ driverId: driver.id, orderId })
             const notificationId = orderNotifiction.result.id
             await sendNewOrderNotification(driver.firebaseToken, notificationId)
-            setTimeout(function () {
-              const promise = module.exports.findBaseById(order.id)
-              promise.then(res => {
-                const currentOrder = res.result
-                if (currentOrder.status === 0) {
-                  expiredStatusChange(orderNotifiction.result)
-                  blockedDrivers.push(driver.id)
-                  module.exports.processDeliveryOrder(currentOrder, blockedDrivers)
-                  module.exports.deliverOldestOrder(currentOrder.id)
-                }
-              })
-            }, 2 * 60 * 1000);
           }
-          resolve(new Response(true, order, {}));
+          resolve(new Response(true, orderId, {}));
         } catch (error) {
           reject(error)
         }
       })()
     })
   },
+  // processDeliveryOrder: async (order, blockedDrivers) => {
+  //   return new Promise((resolve, reject) => {
+  //     (async () => {
+  //       try {
+  //         const client = await getClient(order.clientId)
+  //         const driver = await findAppropriateDriver(order, blockedDrivers, client)
+  //         if (driver) {
+  //           const orderNotifiction = await NotificationsService.add({ driverId: driver.id, orderId: order.id })
+  //           const notificationId = orderNotifiction.result.id
+  //           await sendNewOrderNotification(driver.firebaseToken, notificationId)
+  //           setTimeout(function () {
+  //             const promise = module.exports.findBaseById(order.id)
+  //             promise.then(res => {
+  //               const currentOrder = res.result
+  //               if (currentOrder.status === 0) {
+  //                 expiredStatusChange(orderNotifiction.result)
+  //                 blockedDrivers.push(driver.id)
+  //                 module.exports.processDeliveryOrder(currentOrder, blockedDrivers)
+  //                 module.exports.deliverOldestOrder(currentOrder.id)
+  //               }
+  //             })
+  //           }, 1.5 * 60 * 1000);
+  //         }
+  //         resolve(new Response(true, order, {}));
+  //       } catch (error) {
+  //         reject(error)
+  //       }
+  //     })()
+  //   })
+  // },
   deliverOldestOrder: async (blockedOrder) => {
     return new Promise((resolve, reject) => {
       (async () => {

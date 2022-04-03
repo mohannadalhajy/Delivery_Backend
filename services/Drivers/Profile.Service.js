@@ -62,7 +62,7 @@ module.exports = {
           })
           record.status = status
           await record.save()
-          if(record.status===1) await deliverOldestOrder(-1)
+          // if(record.status===1) await deliverOldestOrder(-1)
           resolve(new Response(true, record, {}));
         } catch (error) {
           reject(error)
