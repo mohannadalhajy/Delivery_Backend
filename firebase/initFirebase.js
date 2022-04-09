@@ -1,17 +1,17 @@
-const { Expo } = require('expo-server-sdk');
-//let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
-let admin = new Expo();
-module.exports = admin;
+// const { Expo } = require('expo-server-sdk');
+// //let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+// let admin = new Expo();
+// module.exports = admin;
 //}
 
-// var admin = require("firebase-admin");
+var admin = require("firebase-admin");
 
-// var serviceAccount = require("./sinbad-delivery-firebase-adminsdk-dfr83-f00e1bcdea.json");
+var serviceAccount = require("./sinbad-delivery-firebase-adminsdk-dfr83-f00e1bcdea.json");
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
-// module.exports = admin;
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+module.exports = admin;
 // const { initializeApp } = require ("firebase/app");
 // // TODO: Add SDKs for Firebase products that you want to use
 // // https://firebase.google.com/docs/web/setup#available-libraries

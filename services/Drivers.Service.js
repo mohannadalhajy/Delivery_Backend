@@ -229,7 +229,7 @@ module.exports = {
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
             //result = result.map(record=>{return {...record,password:"1111"}})
-            if (result.length) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -251,7 +251,7 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({ attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName', 'status'] }).then(result => {
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -277,14 +277,14 @@ module.exports = {
               attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'],
               // include: [{
               //   attributes: [],
-              //   model: models.drivers_vehicles,
+              //   model: models.drivers  _vehicles,
               //   where: {
               //     endDate: null
               //   }
               // }]
             }
           ).then(result => {
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -315,7 +315,7 @@ module.exports = {
             }
           ).then(result => {
             // if (result.length) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -447,7 +447,17 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findByPk(id).then(result => {
+          const result = await model.findByPk(id
+            // , {
+            // include: [
+            //     {
+            //         model: models.orders,
+            //         required: false,
+            //         where: {
+            //           amountReceived: { [Op.ne]: null },
+            //         }}]
+                  // }
+                  ).then(result => {
             if (result) {
               return (new Response(true, result, {}))
             }
@@ -495,7 +505,7 @@ module.exports = {
               }]
             }
           ).then(result => {
-            if (result.length) return result
+            if (result.length||result.length===0) return result
             else resolve()
           }).catch(error => {
             throw (error)

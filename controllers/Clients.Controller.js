@@ -36,6 +36,22 @@ module.exports = {
       next(error);
     }
   },
+  getCharges: async (req, res, next) => {
+    try {
+      let requestedPage = req.query.page;
+      let recordsInPage = req.query.take;
+      if (requestedPage == null || requestedPage <= 0) requestedPage = 1;
+      requestedPage = parseInt(requestedPage)
+      if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
+      recordsInPage = parseInt(recordsInPage)
+      const id = req.params.id;
+      const result = await services.getCharges(requestedPage, recordsInPage, id)
+      res.send(result)
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
   deleteAll: async (req, res, next) => {
     try {
       const result = await services.deleteAll()

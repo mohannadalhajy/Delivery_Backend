@@ -36,6 +36,8 @@ module.exports = {
               })
               return (new Response(true, { result, count, pageCount }, {}))
             }
+            else if(result.length===0)
+              return (new Response(true, { result, count, pageCount }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),

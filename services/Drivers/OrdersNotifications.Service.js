@@ -27,7 +27,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            if (result.length) {
+            if (result.length || result.length === 0) {
               return (new Response(true, { result, count, pageCount }, {}))
             }
             else throw (

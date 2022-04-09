@@ -125,6 +125,8 @@ module.exports = {
                             })
                             return (new Response(true, { drivers: result, pageCount, count }, {}))
                         }
+                        else if (result.length === 0)
+                            return (new Response(true, { drivers: result, pageCount, count }, {}))
                         else throw (
                             createError.NotFound({
                                 error: new Response(false, {}, "There is no drivers"),
@@ -172,7 +174,7 @@ module.exports = {
                             delete record['driver_vehicles']
                             return record
                         })
-                        if (result.length) return (new Response(true, { vehicles: result, pageCount, count }, {}))
+                        if (result.length||result.length===0) return (new Response(true, { vehicles: result, pageCount, count }, {}))
                         else throw (
                             createError.NotFound({
                                 error: new Response(false, {}, "There is no drivers"),
@@ -223,7 +225,7 @@ module.exports = {
                             delete record['vehicle']
                             return record
                         })
-                        if (result.length) return (new Response(true, { transactions: result, pageCount, count }, {}))
+                        if (result.length||result.length===0) return (new Response(true, { transactions: result, pageCount, count }, {}))
                         else throw (
                             createError.NotFound({
                                 error: new Response(false, {}, "There is no drivers"),

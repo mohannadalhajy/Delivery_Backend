@@ -6,7 +6,10 @@ const {
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
 const { getEmirates } = require("../helpers/Constants");
 const model = models.clients
+const modelCharges = models.charges
+const modelOrders = models.orders
 const bcrypt = require("bcryptjs");
+const { sequelize } = require("../models");
 const validation = async (record, arrayError, type) => {
   if (!record) {
     arrayError.push(new ErrorResponse(
@@ -174,7 +177,7 @@ const validation = async (record, arrayError, type) => {
       `clientNameArabic is empty`,
       SERVER_ERRORS.NAME_EMPTY
     ))
-  if (record.emirate===undefined)
+  if (record.emirate === undefined)
     arrayError.push(new ErrorResponse(
       "createClient",
       "emirate",
@@ -249,7 +252,7 @@ const validation = async (record, arrayError, type) => {
       }
     }
   }
-  if (record.companyPhone===undefined)
+  if (record.companyPhone === undefined)
     arrayError.push(new ErrorResponse(
       "createClient",
       "companyPhone",
@@ -384,7 +387,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            if (result.length) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no clients"),
@@ -419,17 +422,50 @@ module.exports = {
             // limit: recordsInPage,
             // offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            let orders = result[0].orders
+            let orders = result.length?result[0].orders:[]
             orders = orders.map(record => record.dataValues).map(order => {
               order.driverName = order.driver ? order.driver.nickName : undefined;
               delete order['driver'];
               return order;
             })
             let pageCount = Math.ceil(count / recordsInPage);
-            if (result.length) return (new Response(true, { result: orders, pageCount, count }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result: orders, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),
+                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
+  getCharges: async (requestedPage, recordsInPage, id) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          const count = await models.charges.count({ clientId: id })
+          const result = await model.findAll({
+            where: { id },
+            include: [{
+              model: models.charges,
+              limit: recordsInPage,
+              offset: (requestedPage - 1) * recordsInPage
+            }],
+            // limit: recordsInPage,
+            // offset: (requestedPage - 1) * recordsInPage
+          }).then(result => {
+            let pageCount = Math.ceil(count / recordsInPage);
+            if (result.length || result.length === 0) return (new Response(true, { result: result.length === 0?[]:result[0].charges, pageCount, count }, {}))
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "There is no charges"),
                 code: SERVER_ERRORS.RECORDS_NOT_FOUND,
               })
             )
@@ -483,7 +519,7 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({ attributes: ['id', 'companyNameEnglish', 'companyNameArabic'] }).then(result => {
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length ||result.length === 0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no clients"),
@@ -579,8 +615,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findByPk(id).then(result => {
-            if (result) return (new Response(true, result, {}))
+          let result = await model.findByPk(id, { raw: true }).then(result => {
+            if (result) return result//(new Response(true, result, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "Client not found"),
@@ -590,6 +626,33 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
+          let allPoints = await modelCharges.findAll({
+            where: { clientId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('points')), 'points'],
+            ],
+            group: ['clientId']
+          })
+          if (allPoints)
+            allPoints = allPoints[0].points
+          else allPoints = 0
+          const ordersAccounts = await modelOrders.findAll({
+            where: { clientId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('points')), 'points'],
+              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+            ],
+            group: ['clientId']
+          })
+          let allPointsConsumed = 0
+          let ordersAmount = 0
+          if (ordersAccounts) {
+            allPointsConsumed = ordersAccounts[0].points
+            ordersAmount = ordersAccounts[0].amount
+          }
+          const points = allPoints - allPointsConsumed
+          const amount = ordersAmount
+          result = new Response(true, { ...result, points, amount }, {})
           resolve(result);
         } catch (error) {
           reject(error)

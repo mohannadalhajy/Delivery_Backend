@@ -25,6 +25,7 @@ router.post("/", verifyAccessToken, controller.add);
 router.get("/", controller.getAll);
 router.get("/companiesNames", verifyAccessToken, controller.getCompaniesNames);
 router.get("/orders/:id", verifyAccessToken, controller.getOrders);
+router.get("/charges/:id", verifyAccessToken, controller.getCharges);
 router.delete("/deleteAll", verifyAccessToken, controller.deleteAll);
 router.post("/deleteGroup", verifyAccessToken, controller.deleteGroup);
 router.delete("/:id", verifyAccessToken, controller.delete);

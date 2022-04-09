@@ -10,6 +10,7 @@ const app = express();
 require('./models/index.js') 
 const clientsRoute = require('./routes/Clients.Router')
 const ordersRoute = require('./routes/Orders.Router')
+const chargesRoute = require('./routes/Charges.Router')
 const offersRoute = require('./routes/Offers.Router')
 const usersRoute = require('./routes/Users.Router')
 const authRoute = require('./routes/Auth.Router')
@@ -62,6 +63,7 @@ app.use('/driversImages', express.static('DriversImages'));
 app.use('/offersImages', express.static('OffersImages'));
 app.use('/clients',clientsRoute)
 app.use('/orders',ordersRoute)
+app.use('/charges',chargesRoute)
 app.use('/offers',offersRoute)
 app.use('/drivers',driversRoute)
 app.use('/driverVehicles',driverVehiclesRoute)

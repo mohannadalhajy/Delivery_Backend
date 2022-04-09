@@ -153,7 +153,7 @@ module.exports = {
               model: models.clients
             }]
           }).then(result => {
-            if (result.length) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no customers"),
@@ -178,7 +178,7 @@ module.exports = {
             where: { clientId },
             attributes: ['id', 'nameEnglish', 'nameArabic']
           }).then(result => {
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no clients"),
@@ -209,7 +209,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            if (result.length) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no customers"),
@@ -239,9 +239,9 @@ module.exports = {
               offset: (requestedPage - 1) * recordsInPage
             }],
           }).then(result => {
-            let orders = result[0].orders
+            let orders = result.length===0?[]:result[0].orders
             let pageCount = Math.ceil(count / recordsInPage);
-            if (result.length) return (new Response(true, { result: orders, pageCount, count }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result: orders, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),

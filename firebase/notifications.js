@@ -1,5 +1,5 @@
 const admin = require("./initFirebase");
-const { Expo } = require('expo-server-sdk');
+// const { Expo } = require('expo-server-sdk');
 module.exports = {
   NOTIFY_TYPES: () => {
     return {
@@ -8,9 +8,9 @@ module.exports = {
     };
   },
   sendNewOrderNotification: async (token, notificationId) => {
-    if (!Expo.isExpoPushToken(token)) {
-      console.error(`Push token ${token} is not a valid Expo push token`);
-    }
+    // if (!Expo.isExpoPushToken(token)) {
+    //   console.error(`Push token ${token} is not a valid Expo push token`);
+    // }
     const messages = [{
       to: token,
       sound: 'default',
@@ -28,9 +28,9 @@ module.exports = {
     }
   },
   sendCancelOrderNotification: async (token, notificationId) => {
-    if (!Expo.isExpoPushToken(token)) {
-      console.error(`Push token ${token} is not a valid Expo push token`);
-    }
+    // if (!Expo.isExpoPushToken(token)) {
+    //   console.error(`Push token ${token} is not a valid Expo push token`);
+    // }
     const messages = [{
       to: token,
       sound: 'default',

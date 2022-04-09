@@ -32,7 +32,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            if (result.length) return (new Response(true, result, {}))
+            if (result.length||result.length===0) return (new Response(true, result, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no users"),

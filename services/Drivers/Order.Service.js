@@ -83,7 +83,8 @@ const deliveredStatusChange = async (order, orderNotifiction) => {
   orderNotifiction.status = 3
   orderNotifiction.deliveredDate = new Date()
   await order.save()
-  await updateStatus(orderNotifiction.driverId, 1)
+  if (orderNotifiction.driverId)
+    await updateStatus(orderNotifiction.driverId, 1)
   await orderNotifiction.save()
 }
 module.exports = {

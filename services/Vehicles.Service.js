@@ -72,7 +72,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            if (result.length) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no vehicles"),
@@ -94,7 +94,7 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({ attributes: ['id', 'number'] }).then(result => {
-            if (result.length) return (new Response(true, { result }, {}))
+            if (result.length||result.length===0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no vehicles"),
@@ -126,7 +126,7 @@ module.exports = {
                 }
               }]
             }).then(result => {
-              if (result.length) return (new Response(true, { result }, {}))
+              if (result.length||result.length===0) return (new Response(true, { result }, {}))
               else throw (
                 createError.NotFound({
                   error: new Response(false, {}, "There is no vehicles"),
@@ -155,8 +155,8 @@ module.exports = {
                 model: models.drivers_vehicles
               }]
             }).then(result => {
-              if (result.length) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
-              if (result.length) return (new Response(true, { result }, {}))
+              if (result.length||result.length===0) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
+              if (result.length||result.length===0) return (new Response(true, { result }, {}))
               else throw (
                 createError.NotFound({
                   error: new Response(false, {}, "There is no vehicles"),

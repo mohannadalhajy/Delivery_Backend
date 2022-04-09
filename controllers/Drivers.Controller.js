@@ -104,16 +104,6 @@ module.exports = {
       next(error);
     }
   },
-  findById: async (req, res, next) => {
-    try {
-      const id = req.params.id;
-      const result = await services.findById(id)
-      res.send(result)
-    } catch (error) {
-      console.log(error.message);
-      next(error);
-    }
-  },
   getAppropriateDriver: async (req, res, next) => {
     try {
       const result = await services.findAppropriateDriver({transportType:0},[],
