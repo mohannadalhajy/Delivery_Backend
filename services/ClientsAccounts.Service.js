@@ -42,7 +42,7 @@ module.exports = {
               return (new Response(true, { result, count, pageCount }, {}))
               else throw (
                 createError.NotFound({
-                  error: new Response(false, {}, "There is no charges"),
+                  error: new Response(false, {}, "There is no accounts"),
                   code: SERVER_ERRORS.RECORDS_NOT_FOUND,
                 })
               )
@@ -64,7 +64,7 @@ module.exports = {
             if (result) return (new Response(true, result, {}))
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "charge not found"),
+                error: new Response(false, {}, "account not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
@@ -145,14 +145,14 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          record = { ...record, startDate: new Date(), status: 0 }
-          const record = await model.create(record).then(result => {
+          record = { ...record, date: new Date(), status: 0 }
+          const result = await model.create(record).then(result => {
             return result
           }).catch(error => {
             console.log(error)
             throw (error)
           })
-          resolve(new Response(true, record, {}));
+          resolve(new Response(true, result, {}));
         } catch (error) {
           reject(error)
         }

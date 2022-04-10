@@ -4,6 +4,7 @@ const {
   Response, ErrorResponse,
 } = require("../../helpers/Response.Helper");
 const SERVER_ERRORS = require("../../helpers/ServerErrors.Helper");
+const { getRecordsCountInPage } = require("../../helpers/Constants");
 // const validation = async (order, arrayError) => {
 // }
 const model = models.orders_notifications
@@ -13,12 +14,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
+          if (!(requestedPage == null || requestedPage <= 0)) requestedPage = parseInt(requestedPage)
+          if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
+          recordsInPage = parseInt(recordsInPage)
           let count = await model.count({ where: { driverId } })
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
-          let pageCount = Math.ceil(count / recordsInPage);
-          const result = await model.findAll({
+          let pageCount = Math.ceil(count / requestedPage?recordsInPage:1);
+          const options = requestedPage?{
             attributes: ['id', 'orderId', 'status'],
             order: [
               ['id', 'DESC']
@@ -26,7 +30,14 @@ module.exports = {
             where: { driverId },
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
-          }).then(result => {
+          }:{
+            attributes: ['id', 'orderId', 'status'],
+            order: [
+              ['id', 'DESC']
+            ],
+            where: { driverId },
+          }
+          const result = await model.findAll(options).then(result => {
             if (result.length || result.length === 0) {
               return (new Response(true, { result, count, pageCount }, {}))
             }

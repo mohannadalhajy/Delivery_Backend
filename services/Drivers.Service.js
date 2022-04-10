@@ -447,7 +447,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findByPk(id
+          const result = await model.findByPk(id, {raw: true}
             // , {
             // include: [
             //     {

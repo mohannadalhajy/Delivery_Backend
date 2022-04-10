@@ -228,7 +228,7 @@ module.exports = {
         try {
           const driver = await findById(driverId)
           if (driver) {
-            const orderNotifiction = await NotificationsService.add({ driverId: driver.id, orderId })
+            const orderNotifiction = await NotificationsService.add({ driverId: driver.result.id, orderId })
             const notificationId = orderNotifiction.result.id
             await sendNewOrderNotification(driver.firebaseToken, notificationId)
           }

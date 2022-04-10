@@ -4,6 +4,7 @@ const {
   Response, ErrorResponse,
 } = require("../helpers/Response.Helper");
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
+const { getRecordsCountInPage } = require("../helpers/Constants");
 // const { getEmirates } = require("../helpers/Constants");
 const model = models.customers
 const validation = async (record, arrayError, type, clientId) => {
@@ -198,17 +199,23 @@ module.exports = {
   getAllToClient: async (clientId, requestedPage, recordsInPage) => {
     return new Promise((resolve, reject) => {
       (async () => {
-        try {
+        try { 
+          if (!(requestedPage == null || requestedPage <= 0)) requestedPage = parseInt(requestedPage)
+          if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
+          recordsInPage = parseInt(recordsInPage)
           let count = await model.count({ where: { clientId } })
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
-          let pageCount = Math.ceil(count / recordsInPage);
-          const result = await model.findAll({
+          let pageCount = Math.ceil(count / requestedPage?recordsInPage:1);
+          const options = requestedPage?{
             where: { clientId },
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
-          }).then(result => {
+          }:{
+            where: { clientId }
+          }
+          const result = await model.findAll(options).then(result => {
             if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({

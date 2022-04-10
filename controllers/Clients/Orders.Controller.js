@@ -1,4 +1,3 @@
-const { getRecordsCountInPage } = require("../../helpers/Constants");
 const services = require("../../services/Clients/Orders.Service");
 const ordersServices = require("../../services/Orders.Service");
 const driversOrdersServices = require("../../services/Drivers/Order.Service");
@@ -8,10 +7,6 @@ module.exports = {
     try {
       let requestedPage = req.query.page;
       let recordsInPage = req.query.take;
-      if (requestedPage == null || requestedPage <= 0) requestedPage = 1;
-      requestedPage = parseInt(requestedPage)
-      if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
-      recordsInPage = parseInt(recordsInPage)
       const clientId = req.payload.user.id;
       const result = await services.getAll(requestedPage, recordsInPage, clientId)
       res.send(result)

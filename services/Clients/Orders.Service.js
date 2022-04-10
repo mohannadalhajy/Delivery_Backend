@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const models = require("../../models");
 const { Response } = require("../../helpers/Response.Helper");
 const SERVER_ERRORS = require("../../helpers/ServerErrors.Helper");
+const { getRecordsCountInPage } = require("../../helpers/Constants");
 
 const model = models.orders
 module.exports = {
@@ -9,12 +10,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
+          if (!(requestedPage == null || requestedPage <= 0)) requestedPage = parseInt(requestedPage)
+          if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
+          recordsInPage = parseInt(recordsInPage)
           let count = await model.count({where:{clientId}})
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
-          let pageCount = Math.ceil(count / recordsInPage);
-          const result = await model.findAll({
+          let pageCount = Math.ceil(count / requestedPage?recordsInPage:1);
+          const options = requestedPage?{
             where:{clientId},
             include: [{
               model: models.clients,
@@ -25,7 +29,17 @@ module.exports = {
             order: [
               ['id', 'DESC']
             ]
-          }).then(result => {
+          }:{
+            where:{clientId},
+            include: [{
+              model: models.clients,
+              attributes: ['companyNameEnglish', 'companyNameArabic']
+            }],
+            order: [
+              ['id', 'DESC']
+            ]
+          }
+          const result = await model.findAll(options).then(result => {
             if (result.length) {
               result = result.map(record => record.dataValues)
               result = result.map(record => {

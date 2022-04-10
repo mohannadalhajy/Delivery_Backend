@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.drivers__accounts.belongsTo(models.clients, {foreignKey: 'clientId', targetKey: 'id'});
     }
   };
   drivers__accounts.init({

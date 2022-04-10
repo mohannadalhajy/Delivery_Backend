@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       models.clients.hasMany(models.orders, {foreignKey: 'clientId', targetKey: 'id'})
       models.clients.hasMany(models.charges, {foreignKey: 'clientId', targetKey: 'id'})
       models.clients.hasMany(models.customers, {foreignKey: 'clientId', targetKey: 'id'})  
+      models.clients.hasMany(models.clients_accounts, {foreignKey: 'clientId', targetKey: 'id'})  
+      models.clients.hasMany(models.drivers__accounts, {foreignKey: 'clientId', targetKey: 'id'})  
     }
   };
   clients.init({

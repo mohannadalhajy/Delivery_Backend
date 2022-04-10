@@ -8,6 +8,7 @@ const { getEmirates } = require("../helpers/Constants");
 const model = models.clients
 const modelCharges = models.charges
 const modelOrders = models.orders
+const modelClientsAccounts = models.clients_accounts
 const bcrypt = require("bcryptjs");
 const { sequelize } = require("../models");
 const validation = async (record, arrayError, type) => {
@@ -646,12 +647,23 @@ module.exports = {
           })
           let allPointsConsumed = 0
           let ordersAmount = 0
+          let deliveredAmount = 0
           if (ordersAccounts) {
             allPointsConsumed = ordersAccounts[0].points
             ordersAmount = ordersAccounts[0].amount
           }
           const points = allPoints - allPointsConsumed
-          const amount = ordersAmount
+          const deliveredAccounts = await modelClientsAccounts.findAll({
+            where: { clientId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+            ],
+            group: ['clientId']
+          })
+          if (deliveredAccounts) {
+            deliveredAmount = deliveredAccounts[0].amount
+          }
+          const amount = ordersAmount - deliveredAmount
           result = new Response(true, { ...result, points, amount }, {})
           resolve(result);
         } catch (error) {
