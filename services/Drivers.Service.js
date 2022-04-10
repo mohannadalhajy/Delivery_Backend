@@ -6,8 +6,10 @@ const {
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
 const Op = require('sequelize').Op;
 const bcrypt = require("bcryptjs");
-const { Sequelize } = require("../models");
+const { Sequelize, sequelize } = require("../models");
 const model = models.drivers
+const modelOrders = models.orders
+const modelDriversAccounts = models.drivers_accounts
 const validation = async (record, arrayError, type) => {
   if (!record) {
     arrayError.push(new ErrorResponse(
@@ -459,7 +461,7 @@ module.exports = {
                   // }
                   ).then(result => {
             if (result) {
-              return (new Response(true, result, {}))
+              return result
             }
             else throw (
               createError.NotFound({
@@ -470,7 +472,30 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
-          resolve(result);
+          const ordersAccounts = await modelOrders.findAll({
+            where: { driverId: id, status: 4 },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+            ],
+            group: ['driverId']
+          })
+          let ordersAmount = 0
+          let deliveredAmount = 0
+          if (ordersAccounts) {
+            ordersAmount = ordersAccounts[0].amount
+          }
+          const deliveredAccounts = await modelDriversAccounts.findAll({
+            where: { driverId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+            ],
+            group: ['driverId']
+          })
+          if (deliveredAccounts) {
+            deliveredAmount = deliveredAccounts[0].amount
+          }
+          const amount = ordersAmount - deliveredAmount
+          resolve(new Response(true, {...result, amount}, {}));
         } catch (error) {
           reject(error)
         }

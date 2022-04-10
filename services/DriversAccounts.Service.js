@@ -2,11 +2,10 @@ const createError = require("http-errors");
 const models = require("../models");
 const { Response } = require("../helpers/Response.Helper");
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
-// const { findAppropriateDriver } = require("./Drivers.Service");
 const Op = require('sequelize').Op;
 const validation = async (record, arrayError) => {
 }
-const model = models.charges
+const model = models.drivers_accounts
 module.exports = {
   getAll: async (requestedPage, recordsInPage) => {
     return new Promise((resolve, reject) => {
@@ -19,10 +18,10 @@ module.exports = {
           let pageCount = Math.ceil(count / recordsInPage);
           const options = {
             include: [{
-              model: models.clients,
-              attributes: ['companyNameEnglish', 'companyNameArabic']
+              model: models.drivers,
+              attributes: ['nickName']
             }],
-            charge: [
+            order: [
               ['id', 'DESC']
             ],
             limit: recordsInPage,
@@ -32,20 +31,17 @@ module.exports = {
               if (result.length) {
                 result = result.map(record => record.dataValues)
                 result = result.map(record => {
-                  record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
-                  record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
-                  delete record['client'];
                   record.driverName = record.driver ? record.driver.nickName : undefined;
                   delete record['driver'];
                   return record;
                 })
                 return (new Response(true, { result, count, pageCount }, {}))
               }
-              else if (result.length === 0)
-                return (new Response(true, { result, count, pageCount }, {}))
+              else if (result.length===0)
+              return (new Response(true, { result, count, pageCount }, {}))
               else throw (
                 createError.NotFound({
-                  error: new Response(false, {}, "There is no charges"),
+                  error: new Response(false, {}, "There is no accounts"),
                   code: SERVER_ERRORS.RECORDS_NOT_FOUND,
                 })
               )
@@ -67,7 +63,7 @@ module.exports = {
             if (result) return (new Response(true, result, {}))
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "charge not found"),
+                error: new Response(false, {}, "account not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
@@ -130,7 +126,7 @@ module.exports = {
             if (result[0]) return (new Response(true, newRecord, {}))
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "charge not found"),
+                error: new Response(false, {}, "record not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
@@ -148,15 +144,14 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          record = { ...record, startDate: new Date(), status: 0 }
-          const charge = await model.create(record).then(result => {
+          record = { ...record, date: new Date(), status: 0 }
+          const result = await model.create(record).then(result => {
             return result
           }).catch(error => {
             console.log(error)
             throw (error)
           })
-          //module.exports.processDeliverycharge(charge)
-          resolve(new Response(true, charge, {}));
+          resolve(new Response(true, result, {}));
         } catch (error) {
           reject(error)
         }
@@ -173,7 +168,7 @@ module.exports = {
             }
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "charge not found"),
+                error: new Response(false, {}, "record not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
@@ -193,20 +188,19 @@ module.exports = {
         try {
           const result = await model.findByPk(id, {
             include: [{
-              model: models.clients,
-              attributes: ['companyNameArabic', 'companyNameEnglish']
+              model: models.drivers,
+              attributes: ['nickName']
             }],
           }).then(result => {
             if (result) {
               result = result.dataValues;
-              result.companyNameArabic = result.client ? result.client.companyNameArabic : undefined;
-              result.companyNameEnglish = result.client ? result.client.companyNameEnglish : undefined;
-              delete result['client'];
-              return (new Response(true, result, {}))
+              result.driverName = record.driver ? record.driver.nickName : undefined;
+              delete result['driver'];
+            return (new Response(true, result, {}))
             }
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "charge not found"),
+                error: new Response(false, {}, "record not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )

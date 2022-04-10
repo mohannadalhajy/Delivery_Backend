@@ -638,10 +638,10 @@ module.exports = {
             allPoints = allPoints[0].points
           else allPoints = 0
           const ordersAccounts = await modelOrders.findAll({
-            where: { clientId: id },
+            where: { clientId: id, status: 4 },
             attributes: [
               [sequelize.fn('sum', sequelize.col('points')), 'points'],
-              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+              [sequelize.fn('sum', sequelize.col('amountReceived')), 'amount']
             ],
             group: ['clientId']
           })

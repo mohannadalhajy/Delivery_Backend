@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class drivers__accounts extends Model {
+  class drivers_accounts extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,16 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.drivers__accounts.belongsTo(models.clients, {foreignKey: 'clientId', targetKey: 'id'});
+      models.drivers_accounts.belongsTo(models.drivers, {foreignKey: 'driverId', targetKey: 'id'});
     }
   };
-  drivers__accounts.init({
+  drivers_accounts.init({
     driverId: DataTypes.INTEGER,
     amount: DataTypes.DOUBLE,
     date: DataTypes.DATEONLY
   }, {
     sequelize,
-    modelName: 'drivers__accounts',
+    modelName: 'drivers_accounts',
   });
-  return drivers__accounts;
+  return drivers_accounts;
 };

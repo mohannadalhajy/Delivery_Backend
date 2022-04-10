@@ -21,7 +21,7 @@ module.exports = {
               model: models.clients,
               attributes: ['companyNameEnglish', 'companyNameArabic']
             }],
-            charge: [
+            order: [
               ['id', 'DESC']
             ],
             limit: recordsInPage,
