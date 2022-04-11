@@ -23,7 +23,11 @@ module.exports = {
             include: [{
               model: models.clients,
               attributes: ['companyNameEnglish', 'companyNameArabic']
-            }],
+            },{
+              model: models.customers,
+              attributes: ['nameEnglish', 'nameArabic']
+            }
+          ],
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage,
             order: [
@@ -34,6 +38,9 @@ module.exports = {
             include: [{
               model: models.clients,
               attributes: ['companyNameEnglish', 'companyNameArabic']
+            },{
+              model: models.customers,
+              attributes: ['nameEnglish', 'nameArabic']
             }],
             order: [
               ['id', 'DESC']
@@ -46,6 +53,9 @@ module.exports = {
                 record.companyNameEnglish = record.client?record.client.companyNameEnglish:undefined;
                 record.companyNameArabic = record.client?record.client.companyNameArabic:undefined;
                 delete record['client'];
+                record.customerNameEnglish = record.customer?record.customer.nameEnglish:undefined;
+                record.customerNameArabic = record.customer?record.customer.nameArabic:undefined;
+                delete record['customer'];
                 return record;
               })
               return (new Response(true, { result, count, pageCount }, {}))
