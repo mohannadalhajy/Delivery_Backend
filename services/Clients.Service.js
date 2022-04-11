@@ -447,7 +447,7 @@ module.exports = {
       })()
     })
   },
-  getCharges: async (requestedPage, recordsInPage, id) => {
+  getCharges: async (id) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
@@ -456,14 +456,12 @@ module.exports = {
             where: { id },
             include: [{
               model: models.charges,
-              limit: recordsInPage,
-              offset: (requestedPage - 1) * recordsInPage
             }],
-            // limit: recordsInPage,
-            // offset: (requestedPage - 1) * recordsInPage
+            order: [
+              ['id', 'DESC']
+            ]
           }).then(result => {
-            let pageCount = Math.ceil(count / recordsInPage);
-            if (result.length || result.length === 0) return (new Response(true, { result: result.length === 0?[]:result[0].charges, pageCount, count }, {}))
+            if (result.length || result.length === 0) return result.length === 0?[]:result[0].charges
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no charges"),
@@ -473,7 +471,8 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
-          resolve(result);
+          const pointsAndAmount = await module.exports.getPointsAndAmount(id)
+          resolve((new Response(true, {records:result, points:pointsAndAmount.points, amount: pointsAndAmount.amount}, {})));
         } catch (error) {
           reject(error)
         }
@@ -665,6 +664,55 @@ module.exports = {
           }
           const amount = ordersAmount - deliveredAmount
           result = new Response(true, { ...result, points, amount }, {})
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
+  getPointsAndAmount: async (id) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          let allPoints = await modelCharges.findAll({
+            where: { clientId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('points')), 'points'],
+            ],
+            group: ['clientId']
+          })
+          if (allPoints)
+            allPoints = allPoints[0].points
+          else allPoints = 0
+          const ordersAccounts = await modelOrders.findAll({
+            where: { clientId: id, status: 4 },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('points')), 'points'],
+              [sequelize.fn('sum', sequelize.col('amountReceived')), 'amount']
+            ],
+            group: ['clientId']
+          })
+          let allPointsConsumed = 0
+          let ordersAmount = 0
+          let deliveredAmount = 0
+          if (ordersAccounts) {
+            allPointsConsumed = ordersAccounts[0].points
+            ordersAmount = ordersAccounts[0].amount
+          }
+          const points = allPoints - allPointsConsumed
+          const deliveredAccounts = await modelClientsAccounts.findAll({
+            where: { clientId: id },
+            attributes: [
+              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+            ],
+            group: ['clientId']
+          })
+          if (deliveredAccounts) {
+            deliveredAmount = deliveredAccounts[0].amount
+          }
+          const amount = ordersAmount - deliveredAmount
+          const result = { points, amount }
           resolve(result);
         } catch (error) {
           reject(error)

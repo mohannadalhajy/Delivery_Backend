@@ -25,6 +25,7 @@ router.post("/", verifyAccessToken, controller.add);
 router.delete("/deleteAll", verifyAccessToken, controller.deleteAll);
 router.post("/deleteGroup", verifyAccessToken, controller.deleteGroup);
 router.get("/", verifyAccessToken, controller.getAll);
+router.get("/ordersCount", verifyAccessToken, controller.getAllWithOrdersCount);
 router.get("/ap123", controller.getAppropriateDriver);
 router.get("/names", verifyAccessToken, controller.getNames);
 router.get("/busyNames", verifyAccessToken, controller.getBusyNames);

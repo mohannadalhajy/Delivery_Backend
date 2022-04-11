@@ -231,7 +231,52 @@ module.exports = {
             offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
             //result = result.map(record=>{return {...record,password:"1111"}})
-            if (result.length||result.length===0) return (new Response(true, { result, pageCount, count }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result, pageCount, count }, {}))
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "There is no drivers"),
+                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
+  getAllWithOrdersCount: async (requestedPage, recordsInPage) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          let count = await model.count()
+            .then(counter => { return counter }).catch(error => {
+              throw (error)
+            })
+          let pageCount = Math.ceil(count / recordsInPage);
+          const result = await model.findAll({
+            limit: recordsInPage,
+            offset: (requestedPage - 1) * recordsInPage,
+            attributes: [
+              'firstName', 'middleName', 'lastName', 'nickName'
+            ],
+            include: [
+              {
+                model: models.orders,
+                required: false,
+                where: {
+                  status: 4,
+                },
+                attributes: [
+                  [sequelize.fn('count', sequelize.col('amountReceived')), 'count']
+                ],
+                group: ['driverId']
+              }]
+          }).then(result => {
+            if (result.length || result.length === 0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -253,7 +298,7 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({ attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName', 'status'] }).then(result => {
-            if (result.length||result.length===0) return (new Response(true, { result }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -286,7 +331,7 @@ module.exports = {
               // }]
             }
           ).then(result => {
-            if (result.length||result.length===0) return (new Response(true, { result }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -317,7 +362,7 @@ module.exports = {
             }
           ).then(result => {
             // if (result.length) result = result.filter(record => !record.driver_vehicles.some(driver_vehicle => driver_vehicle.endDate == null))
-            if (result.length||result.length===0) return (new Response(true, { result }, {}))
+            if (result.length || result.length === 0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
@@ -449,7 +494,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findByPk(id, {raw: true}
+          const result = await model.findByPk(id, { raw: true }
             // , {
             // include: [
             //     {
@@ -458,8 +503,8 @@ module.exports = {
             //         where: {
             //           amountReceived: { [Op.ne]: null },
             //         }}]
-                  // }
-                  ).then(result => {
+            // }
+          ).then(result => {
             if (result) {
               return result
             }
@@ -475,7 +520,7 @@ module.exports = {
           const ordersAccounts = await modelOrders.findAll({
             where: { driverId: id, status: 4 },
             attributes: [
-              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+              [sequelize.fn('sum', sequelize.col('amountReceived')), 'amount']
             ],
             group: ['driverId']
           })
@@ -495,7 +540,7 @@ module.exports = {
             deliveredAmount = deliveredAccounts[0].amount
           }
           const amount = ordersAmount - deliveredAmount
-          resolve(new Response(true, {...result, amount}, {}));
+          resolve(new Response(true, { ...result, amount }, {}));
         } catch (error) {
           reject(error)
         }
@@ -530,7 +575,7 @@ module.exports = {
               }]
             }
           ).then(result => {
-            if (result.length||result.length===0) return result
+            if (result.length || result.length === 0) return result
             else resolve()
           }).catch(error => {
             throw (error)
@@ -538,10 +583,10 @@ module.exports = {
           //resolve( result );
           const distances = result.map(driver => {
             const distance = calculateDistanse({ latitude: driver.latitude, longitude: driver.longitude }, { latitude: client.latitude, longitude: client.longitude })
-            return {driver,distance}
+            return { driver, distance }
           })
           const shortDistance = distances.reduce((acc, val) => {
-            acc[0] = ( acc[0] === undefined || val.distance < acc[0].distance ) ? val : acc[0]
+            acc[0] = (acc[0] === undefined || val.distance < acc[0].distance) ? val : acc[0]
             return acc;
           }, []);
           result = shortDistance[0].driver

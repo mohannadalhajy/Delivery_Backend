@@ -10,36 +10,39 @@ const { getRecordsCountInPage } = require("../../helpers/Constants");
 const model = models.orders_notifications
 
 module.exports = {
-  getAll: async (requestedPage, recordsInPage, driverId) => {
+  getAll: async (driverId) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          if (!(requestedPage == null || requestedPage <= 0)) requestedPage = parseInt(requestedPage)
-          if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
-          recordsInPage = parseInt(recordsInPage)
-          let count = await model.count({ where: { driverId } })
-            .then(counter => { return counter }).catch(error => {
-              throw (error)
-            })
-          let pageCount = Math.ceil(count / requestedPage?recordsInPage:1);
-          const options = requestedPage?{
+          const options = {
             attributes: ['id', 'orderId', 'status'],
             order: [
               ['id', 'DESC']
             ],
+            raw: true,
             where: { driverId },
-            limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage
-          }:{
-            attributes: ['id', 'orderId', 'status'],
-            order: [
-              ['id', 'DESC']
-            ],
-            where: { driverId },
+            include:[{
+              model: models.orders,
+              attributes: ["id"],
+              include:[{
+                model: models.clients,
+                attributes: ['companyNameEnglish','companyNameArabic']
+              }]
+            }]
           }
           const result = await model.findAll(options).then(result => {
             if (result.length || result.length === 0) {
-              return (new Response(true, { result, count, pageCount }, {}))
+              result = result.map(record=>{
+                // record = record.dataValues
+                record.companyNameEnglish = record['order.client.companyNameEnglish']
+                record.companyNameArabic = record['order.client.companyNameArabic']
+                delete record["order.id"]
+                delete record["order.client.id"]
+                delete record["order.client.companyNameEnglish"]
+                delete record["order.client.companyNameArabic"]
+                return record
+              })
+              return (new Response(true, { result }, {}))
             }
             else throw (
               createError.NotFound({

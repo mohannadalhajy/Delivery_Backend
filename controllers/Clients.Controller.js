@@ -38,14 +38,8 @@ module.exports = {
   },
   getCharges: async (req, res, next) => {
     try {
-      let requestedPage = req.query.page;
-      let recordsInPage = req.query.take;
-      if (requestedPage == null || requestedPage <= 0) requestedPage = 1;
-      requestedPage = parseInt(requestedPage)
-      if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
-      recordsInPage = parseInt(recordsInPage)
-      const id = req.params.id;
-      const result = await services.getCharges(requestedPage, recordsInPage, id)
+      const id = req.params.id?req.params.id:req.payload.user.id;
+      const result = await services.getCharges(id)
       res.send(result)
     } catch (error) {
       console.log(error.message);

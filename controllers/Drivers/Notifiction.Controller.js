@@ -4,9 +4,7 @@ module.exports = {
   getAll: async (req, res, next) => {
     try {
       const id = req.payload.user.id;
-      let requestedPage = req.query.page;
-      let recordsInPage = req.query.take;
-      const result = await services.getAll(requestedPage, recordsInPage, id)
+      const result = await services.getAll(id)
       res.send(result)
     } catch (error) {
       console.log(error.message);
