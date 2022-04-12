@@ -23,7 +23,7 @@ module.exports = {
             where: { driverId },
             include:[{
               model: models.orders,
-              attributes: ["id"],
+              attributes: ["id", 'startDate'],
               include:[{
                 model: models.clients,
                 attributes: ['companyNameEnglish','companyNameArabic']
@@ -36,10 +36,12 @@ module.exports = {
                 // record = record.dataValues
                 record.companyNameEnglish = record['order.client.companyNameEnglish']
                 record.companyNameArabic = record['order.client.companyNameArabic']
+                record.date = record['order.startDate']
                 delete record["order.id"]
                 delete record["order.client.id"]
                 delete record["order.client.companyNameEnglish"]
                 delete record["order.client.companyNameArabic"]
+                delete record["order.startDate"]
                 return record
               })
               return (new Response(true, { result }, {}))

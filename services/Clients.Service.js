@@ -472,7 +472,7 @@ module.exports = {
             throw (error)
           })
           const pointsAndAmount = await module.exports.getPointsAndAmount(id)
-          resolve((new Response(true, {records:result, points:pointsAndAmount.points, amount: pointsAndAmount.amount}, {})));
+          resolve((new Response(true, {records:result, points:pointsAndAmount?pointsAndAmount.points:0, amount: pointsAndAmount?pointsAndAmount.amount:0}, {})));
         } catch (error) {
           reject(error)
         }
@@ -682,7 +682,7 @@ module.exports = {
             ],
             group: ['clientId']
           })
-          if (allPoints)
+          if (allPoints.length)
             allPoints = allPoints[0].points
           else allPoints = 0
           const ordersAccounts = await modelOrders.findAll({
@@ -696,7 +696,7 @@ module.exports = {
           let allPointsConsumed = 0
           let ordersAmount = 0
           let deliveredAmount = 0
-          if (ordersAccounts) {
+          if (ordersAccounts.length) {
             allPointsConsumed = ordersAccounts[0].points
             ordersAmount = ordersAccounts[0].amount
           }
@@ -708,7 +708,7 @@ module.exports = {
             ],
             group: ['clientId']
           })
-          if (deliveredAccounts) {
+          if (deliveredAccounts.length) {
             deliveredAmount = deliveredAccounts[0].amount
           }
           const amount = ordersAmount - deliveredAmount
