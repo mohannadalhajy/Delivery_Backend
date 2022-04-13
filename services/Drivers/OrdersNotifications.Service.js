@@ -21,18 +21,18 @@ module.exports = {
             ],
             raw: true,
             where: { driverId },
-            include:[{
+            include: [{
               model: models.orders,
               attributes: ["id", 'startDate'],
-              include:[{
+              include: [{
                 model: models.clients,
-                attributes: ['companyNameEnglish','companyNameArabic']
+                attributes: ['companyNameEnglish', 'companyNameArabic']
               }]
             }]
           }
           const result = await model.findAll(options).then(result => {
             if (result.length || result.length === 0) {
-              result = result.map(record=>{
+              result = result.map(record => {
                 // record = record.dataValues
                 record.companyNameEnglish = record['order.client.companyNameEnglish']
                 record.companyNameArabic = record['order.client.companyNameArabic']
@@ -44,14 +44,16 @@ module.exports = {
                 delete record["order.startDate"]
                 return record
               })
-              return (new Response(true, { result }, {}))
+              return (new Response(true, result, {}))
             }
-            else throw (
-              createError.NotFound({
-                error: new Response(false, {}, "There is no notifications"),
-                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
-              })
-            )
+            else
+              return new Response(true, [], {})
+            // throw (
+            //   createError.NotFound({
+            //     error: new Response(false, {}, "There is no notifications"),
+            //     code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+            //   })
+            // )
           }).catch(error => {
             throw (error)
           })
@@ -70,12 +72,14 @@ module.exports = {
             if (result) {
               return (new Response(true, result, {}))
             }
-            else throw (
-              createError.NotFound({
-                error: new Response(false, {}, "Notification not found"),
-                code: SERVER_ERRORS.RECORD_NOT_FOUND,
-              })
-            )
+            else 
+              return (new Response(false, {}, "Notification not found"))
+            // throw (
+            //   createError.NotFound({
+            //     error: new Response(false, {}, "Notification not found"),
+            //     code: SERVER_ERRORS.RECORD_NOT_FOUND,
+            //   })
+            // )
           }).catch(error => {
             throw (error)
           })
@@ -91,8 +95,8 @@ module.exports = {
       (async () => {
         try {
           const result = await model.findAll({
-            where:{
-              orderId:id
+            where: {
+              orderId: id
             }
           }).then(result => {
             return (new Response(true, result, {}))

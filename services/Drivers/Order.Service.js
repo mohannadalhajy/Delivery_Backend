@@ -101,18 +101,21 @@ module.exports = {
               'deliveredDate',
               'receivedDate']
           }).then(result => {
-            if (result) {
-              return result
-            }
-            else throw (
-              createError.NotFound({
-                error: new Response(false, {}, "Notification not found"),
-                code: SERVER_ERRORS.RECORD_NOT_FOUND,
-              })
-            )
+            // if (result) {
+            return result
+            // }
+            // else return 
+            // throw (
+            //   createError.NotFound({
+            //     error: new Response(false, {}, "Notification not found"),
+            //     code: SERVER_ERRORS.RECORD_NOT_FOUND,
+            //   })
+            // )
           }).catch(error => {
             throw (error)
           })
+          if (!notification)
+            resolve(new Response(false, {}, "Notification not found"));
           const order = await model.findByPk(notification.orderId, {
             attributes: [
               ['id', 'orderId'],
@@ -144,18 +147,20 @@ module.exports = {
                 'phone']
             }],
           }).then(result => {
-            if (result) {
-              return result
-            }
-            else throw (
-              createError.NotFound({
-                error: new Response(false, {}, "Order not found"),
-                code: SERVER_ERRORS.RECORD_NOT_FOUND,
-              })
-            )
+            // if (result) {
+            return result
+            // }
+            // else throw (
+            //   createError.NotFound({
+            //     error: new Response(false, {}, "Order not found"),
+            //     code: SERVER_ERRORS.RECORD_NOT_FOUND,
+            //   })
+            // )
           }).catch(error => {
             throw (error)
           })
+          if (!order)
+            resolve(new Response(false, {}, "Order not found"));
           delete notification.orderId
           var result = {};
           for (var attrname in notification.dataValues) { result[attrname] = notification.dataValues[attrname]; }
@@ -173,12 +178,14 @@ module.exports = {
         try {
           const orderNotifiction = await getNotification(id)
           const order = await getOrder(orderNotifiction.orderId)
-          if (order.status !== 0) throw (
-            createError.NotFound({
-              error: new Response(false, {}, "This order is not waiting"),
-              code: SERVER_ERRORS.RECORD_NOT_FOUND,
-            })
-          )
+          if (order.status !== 0)
+            resolve(new Response(false, {}, "This order is not waiting"));
+          // throw (
+          //   createError.NotFound({
+          //     error: new Response(false, {}, "This order is not waiting"),
+          //     code: SERVER_ERRORS.RECORD_NOT_FOUND,
+          //   })
+          // )
           await acceptStatusChange(order, orderNotifiction)
           resolve(new Response(true, {}, {}));
         } catch (error) {
