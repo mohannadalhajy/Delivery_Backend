@@ -29,11 +29,8 @@ module.exports = {
       phone: {
         type: Sequelize.TEXT
       },
-      latitude: {
-        type: Sequelize.DOUBLE
-      },
-      longitude: {
-        type: Sequelize.DOUBLE
+      location: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

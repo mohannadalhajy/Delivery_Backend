@@ -23,16 +23,16 @@ module.exports = {
       emirate: {
         type: Sequelize.INTEGER
       },
-      address: {
+      addressArabic: {
+        type: Sequelize.TEXT
+      },
+      addressEnglish: {
         type: Sequelize.TEXT
       },
       amount: {
         type: Sequelize.DOUBLE
       },
       status: {
-        type: Sequelize.INTEGER
-      },
-      type: {
         type: Sequelize.INTEGER
       },
       transportType: {
@@ -53,11 +53,8 @@ module.exports = {
       failedReason: {
         type: Sequelize.TEXT
       },
-      latitude: {
-        type: Sequelize.DOUBLE
-      },
-      longitude: {
-        type: Sequelize.DOUBLE
+      location: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

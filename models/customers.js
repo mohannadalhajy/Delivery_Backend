@@ -23,8 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     nameEnglish: DataTypes.TEXT,
     nameArabic: DataTypes.TEXT,
     phone: DataTypes.TEXT,
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE
+    location: DataTypes.Text,
   }, {
     sequelize,
     modelName: 'customers',
