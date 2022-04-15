@@ -22,20 +22,20 @@ const validation = async (record, arrayError, type, clientId) => {
   }).catch(error => {
     return 0
   })
-  if (!record.nameEnglish)
-    arrayError.push(new ErrorResponse(
-      "createCustomer",
-      "nameEnglish",
-      `nameEnglish is empty`,
-      SERVER_ERRORS.NAME_EMPTY
-    ))
-  if (!record.nameArabic)
-    arrayError.push(new ErrorResponse(
-      "createCustomer",
-      "nameArabic",
-      `nameArabic is empty`,
-      SERVER_ERRORS.NAME_EMPTY
-    ))
+  // if (!record.nameEnglish)
+  //   arrayError.push(new ErrorResponse(
+  //     "createCustomer",
+  //     "nameEnglish",
+  //     `nameEnglish is empty`,
+  //     SERVER_ERRORS.NAME_EMPTY
+  //   ))
+  // if (!record.nameArabic)
+  //   arrayError.push(new ErrorResponse(
+  //     "createCustomer",
+  //     "nameArabic",
+  //     `nameArabic is empty`,
+  //     SERVER_ERRORS.NAME_EMPTY
+  //   ))
   // if (record.emirate===undefined)
   //   arrayError.push(new ErrorResponse(
   //     "createCustomer",
