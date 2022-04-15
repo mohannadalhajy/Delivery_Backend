@@ -526,7 +526,7 @@ module.exports = {
           })
           let ordersAmount = 0
           let deliveredAmount = 0
-          if (ordersAccounts) {
+          if (ordersAccounts.length) {
             ordersAmount = ordersAccounts[0].amount
           }
           const deliveredAccounts = await modelDriversAccounts.findAll({
@@ -536,7 +536,7 @@ module.exports = {
             ],
             group: ['driverId']
           })
-          if (deliveredAccounts) {
+          if (deliveredAccounts.length) {
             deliveredAmount = deliveredAccounts[0].amount
           }
           const amount = ordersAmount - deliveredAmount

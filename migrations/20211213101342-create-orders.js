@@ -29,7 +29,13 @@ module.exports = {
       addressEnglish: {
         type: Sequelize.TEXT
       },
+      notes: {
+        type: Sequelize.TEXT
+      },
       amount: {
+        type: Sequelize.DOUBLE
+      },
+      amountReceived: {
         type: Sequelize.DOUBLE
       },
       status: {

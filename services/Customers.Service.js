@@ -357,7 +357,7 @@ module.exports = {
           const arrayError = []
           await validation(record, arrayError, "add", clientId)
           if (arrayError.length) throw (createError.Conflict({
-            error: new Response(false, arrayError, "Customer not found"),
+            error: new Response(false, {}, arrayError[0].message),
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
           record.clientId = clientId
