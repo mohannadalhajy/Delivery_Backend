@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     nameEnglish: DataTypes.TEXT,
     nameArabic: DataTypes.TEXT,
     phone: DataTypes.TEXT,
-    location: DataTypes.Text,
+    location: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'customers',
