@@ -120,7 +120,6 @@ module.exports = {
             attributes: [
               ['id', 'orderId'],
               'amount',
-              'type',
               'transportType',
               'address',
               'emirate',
