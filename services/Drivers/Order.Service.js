@@ -121,7 +121,8 @@ module.exports = {
               ['id', 'orderId'],
               'amount',
               'transportType',
-              'address',
+              'addressEnglish',
+              'addressArabic',
               'emirate',
               'location'],
             include: [{
