@@ -5,6 +5,7 @@ const services = require("../services/Clients.Service");
 module.exports = {
   getAll: async (req, res, next) => {
     try {
+      console.log(req.payload)
       let requestedPage = req.query.page;
       let recordsInPage = req.query.take;
       if (requestedPage == null || requestedPage <= 0) requestedPage = 1;

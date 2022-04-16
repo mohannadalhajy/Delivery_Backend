@@ -30,7 +30,7 @@ module.exports = {
               code: SERVER_ERRORS.RECORD_NOT_FOUND,
             })
           )
-          const user = {"userName": result.userName,"id": result.id}
+          const user = {"userName": result.userName,"id": result.id, role: result.role}
           const accessToken = await signAccessToken(user)
           resolve(new Response(true, { accessToken, user }));
         } catch (error) {

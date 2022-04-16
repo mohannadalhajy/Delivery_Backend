@@ -22,7 +22,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post("/", verifyAccessToken, controller.add);
-router.get("/", controller.getAll);
+router.get("/", verifyAccessToken, controller.getAll);
 router.get("/companiesNames", verifyAccessToken, controller.getCompaniesNames);
 router.get("/orders/:id", verifyAccessToken, controller.getOrders);
 router.get("/charges/:id", verifyAccessToken, controller.getCharges);

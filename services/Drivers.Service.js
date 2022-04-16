@@ -614,6 +614,40 @@ module.exports = {
       })()
     })
   },
+  findBaseById: async (id) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          const result = await model.findByPk(id, { raw: true }
+            // , {
+            // include: [
+            //     {
+            //         model: models.orders,
+            //         required: false,
+            //         where: {
+            //           amountReceived: { [Op.ne]: null },
+            //         }}]
+            // }
+          ).then(result => {
+            if (result) {
+              return result
+            }
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "Driver not found"),
+                code: SERVER_ERRORS.RECORD_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
   findAppropriateDriver: async (order, blockedDrivers, client) => {
     return new Promise((resolve, reject) => {
       (async () => {

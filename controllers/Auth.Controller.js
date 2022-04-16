@@ -13,7 +13,7 @@ module.exports = {
   },
   logout: async (req, res, next) => {
     try {
-      console.log(req.payload.id)
+      console.log(req.payload)
       res.send(new Response(true,{},{}))
     } catch (error) {
       console.log(error.message);

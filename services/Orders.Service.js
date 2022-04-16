@@ -7,7 +7,7 @@ const { sendNewOrderNotification } = require("../firebase/notifications");
 const NotificationsService = require("./Notifications.Service");
 const Op = require('sequelize').Op;
 const ClientsService = require("./Clients.Service");
-const { findById } = require("./Drivers.Service");
+const services = require("./Drivers.Service");
 const validation = async (order, arrayError) => {
 }
 const model = models.orders
@@ -227,9 +227,9 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const driver = await findById(driverId)
+          const driver = await services.findBaseById(driverId)
           if (driver) {
-            const orderNotifiction = await NotificationsService.add({ driverId: driver.result.id, orderId })
+            const orderNotifiction = await NotificationsService.add({ driverId: driver.id, orderId })
             const notificationId = orderNotifiction.result.id
             await sendNewOrderNotification(driver.firebaseToken, notificationId)
           }
