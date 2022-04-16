@@ -18,6 +18,16 @@ module.exports = {
       next(error);
     }
   },
+  getAmounts: async (req, res, next) => {
+    try {
+      const id = req.params.id?req.params.id:req.payload.user.id;
+      const result = await services.getAmounts(id)
+      res.send(result)
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
   getAllWithOrdersCount: async (req, res, next) => {
     try {
       let requestedPage = req.query.page;

@@ -494,7 +494,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const count = await models.drivers_accounts.count({ driverId: id })
           const result = await model.findAll({
             where: { id },
             include: [{
@@ -504,7 +503,7 @@ module.exports = {
               ['id', 'DESC']
             ]
           }).then(result => {
-            if (result.length || result.length === 0) return result.length === 0?[]:result[0].charges
+            if (result.length || result.length === 0) return result.length === 0?[]:result[0].drivers_accounts
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no amounts"),
@@ -514,8 +513,8 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
-          const pointsAndAmount = await module.exports.getAmount(id)
-          resolve((new Response(true, {records:result, points:pointsAndAmount?pointsAndAmount.points:0, amount: pointsAndAmount?pointsAndAmount.amount:0}, {})));
+          const amount = await module.exports.getAmount(id)
+          resolve((new Response(true, {records:result, amount}, {})));
         } catch (error) {
           reject(error)
         }
@@ -534,36 +533,24 @@ module.exports = {
             group: ['driverId']
           })
           if (allAmounts.length)
-            allAmounts = allAmounts[0].points
+            allAmounts = allAmounts[0].amount
           else allAmounts = 0
           const ordersAccounts = await modelOrders.findAll({
             where: { driverId: id, status: 4 },
             attributes: [
               [sequelize.fn('sum', sequelize.col('amountReceived')), 'amount']
             ],
-            group: ['driverId']
+            group: ['driverId'], raw: true
           })
-          let allPointsConsumed = 0
           let ordersAmount = 0
           let deliveredAmount = 0
           if (ordersAccounts.length) {
-            allPointsConsumed = ordersAccounts[0].points
             ordersAmount = ordersAccounts[0].amount
           }
-          const points = allAmounts - allPointsConsumed
-          const deliveredAccounts = await modelClientsAccounts.findAll({
-            where: { clientId: id },
-            attributes: [
-              [sequelize.fn('sum', sequelize.col('amount')), 'amount']
-            ],
-            group: ['clientId']
-          })
-          if (deliveredAccounts.length) {
-            deliveredAmount = deliveredAccounts[0].amount
-          }
+          console.log(ordersAmount)
+          console.log(ordersAccounts)
           const amount = ordersAmount - deliveredAmount
-          const result = { points, amount }
-          resolve(result);
+          resolve(amount);
         } catch (error) {
           reject(error)
         }
