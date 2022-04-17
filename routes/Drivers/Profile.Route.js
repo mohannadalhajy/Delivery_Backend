@@ -7,7 +7,7 @@ const { verifyAccessToken } = require("../../helpers/jwt_helper");
 router.get("/profileMe", verifyAccessToken, controller.profileMe);
 router.post("/updatePassword", verifyAccessToken, controller.updatePassword);
 router.post("/location", verifyAccessToken, controller.updateLocation);
-router.patch("/status", verifyAccessToken, controller.updateStatus);
+router.post("/status", verifyAccessToken, controller.updateStatus);
 router.patch("/token", verifyAccessToken, controller.updateFirebaseToken);
 router.post("/updateEmail", verifyAccessToken, controller.updateEmail);
 
