@@ -34,7 +34,9 @@ module.exports = (sequelize, DataTypes) => {
     endDate: DataTypes.DATE,
     cancelDate: DataTypes.DATE,
     failedDate: DataTypes.DATE,
+    editedDate: DataTypes.DATE,
     failedReason: DataTypes.TEXT,
+    editedReason: DataTypes.TEXT,
     location: DataTypes.TEXT
   }, {
     sequelize,

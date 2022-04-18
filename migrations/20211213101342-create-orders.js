@@ -62,6 +62,9 @@ module.exports = {
       location: {
         type: Sequelize.TEXT
       },
+      editedReason: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

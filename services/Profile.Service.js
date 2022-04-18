@@ -10,7 +10,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const user = await models.users.findByPk(id, {attributes:['id','userName']}).then(result => {
+          const user = await models.users.findByPk(id, {attributes:['id','userName', 'role']}).then(result => {
             if (result) return result
             else throw (
               createError.NotFound({

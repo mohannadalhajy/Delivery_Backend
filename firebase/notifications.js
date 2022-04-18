@@ -11,7 +11,6 @@ module.exports = {
     // if (!Expo.isExpoPushToken(token)) {
     //   console.error(`Push token ${token} is not a valid Expo push token`);
     // }
-    console.log(token)
     const message = {
       notification: {
         title: "Order",

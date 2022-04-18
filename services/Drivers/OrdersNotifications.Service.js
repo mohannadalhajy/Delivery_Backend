@@ -23,7 +23,7 @@ module.exports = {
             where: { driverId },
             include: [{
               model: models.orders,
-              attributes: ["id", 'startDate'],
+              attributes: ["id", 'startDate', 'amountReceived'],
               include: [{
                 model: models.clients,
                 attributes: ['companyNameEnglish', 'companyNameArabic']
@@ -37,7 +37,9 @@ module.exports = {
                 record.companyNameEnglish = record['order.client.companyNameEnglish']
                 record.companyNameArabic = record['order.client.companyNameArabic']
                 record.date = record['order.startDate'].toISOString().split('T')[0]
+                record.amount = record['order.amountReceived']
                 delete record["order.id"]
+                delete record["order.amountReceived"]
                 delete record["order.client.id"]
                 delete record["order.client.companyNameEnglish"]
                 delete record["order.client.companyNameArabic"]
