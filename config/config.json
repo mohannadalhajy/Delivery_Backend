@@ -1,12 +1,12 @@
 {
-  "developmentLocal": {
+  "development": {
     "username": "root",
-    "password": "",
-    "database": "deliverydb",
+    "password": "kf123jdn$vDR%Dd&s",
+    "database": "wasselli",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
-  "development": {
+  "developmentyy": {
     "username": "admin",
     "user": "admin",
     "password": "AHMed&5501",
