@@ -11,7 +11,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          record.status = getOrdersNotificationsStatusTypes()[0]
+          record.status = 0
+          // record.status = getOrdersNotificationsStatusTypes()[0]
           const result = await model.create(record).then(result => {
             return (new Response(true, result, {}))
           }).catch(error => {
