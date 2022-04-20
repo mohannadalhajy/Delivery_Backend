@@ -50,6 +50,9 @@ module.exports = {
       endDate: {
         type: Sequelize.DATE
       },
+      editedDate: {
+        type: Sequelize.DATE
+      },
       cancelDate: {
         type: Sequelize.DATE
       },
