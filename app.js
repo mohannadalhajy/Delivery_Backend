@@ -83,8 +83,7 @@ app.use('/driverOrders',driverOrdersRoute)
 app.use('/driverNotifications',driverNotificationsRoute)
 app.use('/clientsAccounts',clientsAccountsRoute)
 app.use('/driversAccounts',driversAccountsRoute)
-app.use(express.static(path.join(__dirname, "./build")))
-app.use(express.static(path.join(__dirname, "./buildTalabat")))
+app.use(express.static(path.join(__dirname, "../Delivery_Dashboard_Web/build")))
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, "../Delivery_Dashboard_Web/build", "index.html"))
 });
