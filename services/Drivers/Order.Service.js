@@ -88,6 +88,11 @@ const deliveredStatusChange = async (order, orderNotifiction) => {
     await updateStatus(orderNotifiction.driverId, 1)
   await orderNotifiction.save()
 }
+const calcPoints = (order)=>{
+  let points = 1
+  if (order.transportType) points = 2
+  return points
+}
 module.exports = {
   findById: async (id) => {
     return new Promise((resolve, reject) => {
@@ -260,6 +265,8 @@ module.exports = {
           const order = await getOrder(orderNotifiction.orderId)
           order.amountReceived = record.amountReceived
           order.notes = record.notes
+          const points = calcPoints(order)
+          order.points = points
           await deliveredStatusChange(order, orderNotifiction)
           resolve(new Response(true, {}, {}));
         } catch (error) {
