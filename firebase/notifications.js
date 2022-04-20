@@ -12,11 +12,13 @@ module.exports = {
     //   console.error(`Push token ${token} is not a valid Expo push token`);
     // }
     const message = {
-      notification: {
-        title: "Order",
-        body: "New Order",
-      },
+//      notification: {
+//        title: "Order",
+//        body: "New Order",
+  //    },
       data: {
+title: "Order",
+        body: "New Order",
         NOTIFY_TYPE: module.exports.NOTIFY_TYPES().NEW_ORDER,
         offer_id: notificationId.toString(),
       },
