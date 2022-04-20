@@ -217,7 +217,7 @@ const calculateDistanse = (point1, point2) => {
   return c
 }
 module.exports = {
-  getAll: async (requestedPage, recordsInPage) => {
+  getAll: async () => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
@@ -225,13 +225,8 @@ module.exports = {
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
-          let pageCount = Math.ceil(count / recordsInPage);
-          const result = await model.findAll({
-            limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage
-          }).then(result => {
-            //result = result.map(record=>{return {...record,password:"1111"}})
-            if (result.length || result.length === 0) return (new Response(true, { result, pageCount, count }, {}))
+          const result = await model.findAll({}).then(result => {
+            if (result.length || result.length === 0) return (new Response(true, { drivers: result, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no drivers"),
