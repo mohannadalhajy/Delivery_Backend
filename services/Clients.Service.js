@@ -343,26 +343,7 @@ const validation = async (record, arrayError, type) => {
       SERVER_ERRORS.COMPANY_TYPE_EMPTY
     ))
   if (!record.contractDate)
-    arrayError.push(new ErrorResponse(
-      "createClient",
-      "contractDate",
-      `contractDate is empty`,
-      SERVER_ERRORS.CONTRACT_DATE_EMPTY
-    ))
-  if (!record.serviceStartDate)
-    arrayError.push(new ErrorResponse(
-      "createClient",
-      "serviceStartDate",
-      `serviceStartDate is empty`,
-      SERVER_ERRORS.SERVICE_START_DATE_EMPTY
-    ))
-  if (!record.serviceEndDate)
-    arrayError.push(new ErrorResponse(
-      "createClient",
-      "serviceEndDate",
-      `serviceEndDate is empty`,
-      SERVER_ERRORS.SERVICE_END_DATE_EMPTY
-    ))
+  record.contractDate = new Date()
 }
 const validationPhone = (phone, type) => {
   var phoneno = /^\+971([0-9]{1}|[0-9]{2})[-. ]?([0-9]{3})([-. ]?([0-9]{4}))?$/;
