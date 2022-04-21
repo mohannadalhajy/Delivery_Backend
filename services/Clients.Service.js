@@ -640,7 +640,7 @@ module.exports = {
             ],
             group: ['clientId']
           })
-          if (deliveredAccounts) {
+          if (deliveredAccounts&&deliveredAccounts.length) {
             deliveredAmount = deliveredAccounts[0].amount
           }
           const amount = ordersAmount - deliveredAmount
