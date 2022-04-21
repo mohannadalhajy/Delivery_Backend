@@ -21,6 +21,12 @@ const getOrder = async (id) => {
   const result = await OrderService.findBaseById(id)
   return result.result
 }
+
+const calcPoints = (order) => {
+  let points = 1
+  if (order.transportType) points = 2
+  return points
+}
 const acceptStatusChange = async (order, orderNotifiction) => {
   order.status = 2
   order.driverId = orderNotifiction.driverId
@@ -32,7 +38,12 @@ const acceptStatusChange = async (order, orderNotifiction) => {
 }
 const cancelStatusChange = async (order, orderNotifictions) => {
   order.status = 1
-  order.canceledDate = new Date()
+  order.endDate = new Date()
+  if (order.status === 2) {
+    const points = calcPoints(order)
+    order.points = points
+  }
+  else order.points = 0
   await order.save()
   for (let i = 0; i < orderNotifictions.length; i++) {
     orderNotifictions[i].status = 7
@@ -55,6 +66,9 @@ const editedStatusChange = async (order, orderNotifiction, editedReason) => {
   orderNotifiction.rejectedDate = new Date()
   order.editedReason = editedReason
   order.amountReceived = 0
+  order.endDate = new Date()
+  const points = calcPoints(order)
+  order.points = points
   await updateStatus(orderNotifiction.driverId, 1)
   await order.save()
   await orderNotifiction.save()
@@ -62,7 +76,7 @@ const editedStatusChange = async (order, orderNotifiction, editedReason) => {
 const failedStatusChange = async (order, orderNotifiction, failedReason) => {
   order.status = 5
   orderNotifiction.status = 4
-  order.failedDate = new Date()
+  order.endDate = new Date()
   order.failedReason = failedReason
   await order.save()
   await updateStatus(orderNotifiction.driverId, 1)
@@ -83,15 +97,13 @@ const deliveredStatusChange = async (order, orderNotifiction) => {
   order.status = 4
   orderNotifiction.status = 3
   orderNotifiction.deliveredDate = new Date()
+  order.endDate = new Date()
+  const points = calcPoints(order)
+  order.points = points
   await order.save()
   if (orderNotifiction.driverId)
     await updateStatus(orderNotifiction.driverId, 1)
   await orderNotifiction.save()
-}
-const calcPoints = (order)=>{
-  let points = 1
-  if (order.transportType) points = 2
-  return points
 }
 module.exports = {
   findById: async (id) => {
@@ -265,8 +277,6 @@ module.exports = {
           const order = await getOrder(orderNotifiction.orderId)
           order.amountReceived = record.amountReceived
           order.notes = record.notes
-          const points = calcPoints(order)
-          order.points = points
           await deliveredStatusChange(order, orderNotifiction)
           resolve(new Response(true, {}, {}));
         } catch (error) {
