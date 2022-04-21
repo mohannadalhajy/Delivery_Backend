@@ -38,6 +38,9 @@ module.exports = {
       amountReceived: {
         type: Sequelize.DOUBLE
       },
+      distance: {
+        type: Sequelize.DOUBLE
+      },
       status: {
         type: Sequelize.INTEGER
       },

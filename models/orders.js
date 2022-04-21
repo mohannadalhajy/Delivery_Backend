@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     editedDate: DataTypes.DATE,
     failedReason: DataTypes.TEXT,
     editedReason: DataTypes.TEXT,
-    location: DataTypes.TEXT
+    location: DataTypes.TEXT,
+    distance: DataTypes.DOUBLE
   }, {
     sequelize,
     modelName: 'orders',
