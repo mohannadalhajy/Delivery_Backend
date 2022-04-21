@@ -218,7 +218,7 @@ module.exports = {
             console.log(error)
             throw (error)
           })
-          module.exports.updateDriver(order.id, {driverId:1})
+          // module.exports.updateDriver(order.id, {driverId:1})
           //module.exports.processDeliveryOrder(order)
           resolve(new Response(true, order, {}));
         } catch (error) {
