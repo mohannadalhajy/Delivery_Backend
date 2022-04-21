@@ -121,7 +121,7 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       (async ()=>{
         try{
-          updateStatus(id, 2)
+          updateStatus(id, 2, true)
           resolve(new Response(true, {}));
         } catch(error){
           reject(error)

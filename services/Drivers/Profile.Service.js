@@ -51,7 +51,7 @@ module.exports = {
       })()
     })
   },
-  updateStatus: async (id, status) => {
+  updateStatus: async (id, status, type) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
@@ -61,6 +61,7 @@ module.exports = {
             throw (error)
           })
           record.status = status
+          if(type) record.firebaseToken = ""
           await record.save()
           // if(record.status===1) await deliverOldestOrder(-1)
           resolve(new Response(true, record, {}));
