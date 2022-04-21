@@ -78,7 +78,6 @@ module.exports = {
               code: SERVER_ERRORS.RECORD_NOT_FOUND,
             })
           )
-          console.log(record.firebaseToken)
           result.firebaseToken = record.firebaseToken
           result.status = 1
           await result.save()

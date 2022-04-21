@@ -50,8 +50,10 @@ module.exports = {
                 result = result.map(record => {
                   record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
                   record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
-                  if(record.startDate&&record.endDate)
-                    record.period = (record.endDate - record.startDate)/ (1000 * 60)
+                  if(record.startDate&&record.endDate){
+                    const period = (record.endDate - record.startDate)/ (1000 * 60)
+                    record.period = Math.round(period * 10) / 10
+                  }
                   delete record['client'];
                   delete record['client'];
                   record.driverName = record.driver ? record.driver.nickName : undefined;

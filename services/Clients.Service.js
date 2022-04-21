@@ -614,7 +614,7 @@ module.exports = {
             ],
             group: ['clientId']
           })
-          if (allPoints)
+          if (allPoints&&allPoints.length)
             allPoints = allPoints[0].points
           else allPoints = 0
           const ordersAccounts = await modelOrders.findAll({
@@ -628,7 +628,7 @@ module.exports = {
           let allPointsConsumed = 0
           let ordersAmount = 0
           let deliveredAmount = 0
-          if (ordersAccounts) {
+          if (ordersAccounts&&ordersAccounts.length) {
             allPointsConsumed = ordersAccounts[0].points
             ordersAmount = ordersAccounts[0].amount
           }
