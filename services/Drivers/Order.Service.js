@@ -64,7 +64,7 @@ const editedStatusChange = async (order, orderNotifiction, editedReason) => {
   orderNotifiction.status = 8
   order.status = 6
   orderNotifiction.rejectedDate = new Date()
-  order.editedReason = editedReason
+  order.reason = editedReason
   order.amountReceived = 0
   order.endDate = new Date()
   const points = calcPoints(order)
@@ -77,7 +77,7 @@ const failedStatusChange = async (order, orderNotifiction, failedReason) => {
   order.status = 5
   orderNotifiction.status = 4
   order.endDate = new Date()
-  order.failedReason = failedReason
+  order.reason = failedReason
   await order.save()
   await updateStatus(orderNotifiction.driverId, 1)
   await orderNotifiction.save()

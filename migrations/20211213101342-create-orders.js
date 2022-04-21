@@ -53,13 +53,10 @@ module.exports = {
       endDate: {
         type: Sequelize.DATE
       },
-      failedReason: {
-        type: Sequelize.TEXT
-      },
       location: {
         type: Sequelize.TEXT
       },
-      editedReason: {
+      reason: {
         type: Sequelize.TEXT
       },
       createdAt: {

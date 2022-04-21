@@ -32,13 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     transportType: DataTypes.INTEGER,
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE,
-    // cancelDate: DataTypes.DATE,
-    // failedDate: DataTypes.DATE,
-    // editedDate: DataTypes.DATE,
-    failedReason: DataTypes.TEXT,
-    editedReason: DataTypes.TEXT,
+    reason: DataTypes.TEXT,
     location: DataTypes.TEXT,
-    distance: DataTypes.DOUBLE/////
+    distance: DataTypes.DOUBLE
   }, {
     sequelize,
     modelName: 'orders',
