@@ -24,7 +24,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let count = await model.count(type?{ where: { status: type } }:{})
+          let count = await model.count(type ? { where: { status: type } } : {})
             .then(counter => { return counter }).catch(error => {
               throw (error)
             })
@@ -44,40 +44,38 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage
           }
-          const result = await model.findAll(type?{...options,where: { status: type }}:options).then(result => {
-              if (result.length) {
-                result = result.map(record => record.dataValues)
-                result = result.map(record => {
-                  record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
-                  record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
-                  if(record.startDate&&record.endDate){
-                    const period = ((record.endDate?record.endDate:new Date()) - (record.startDate?record.startDate:new Date()))/ (1000 * 60)
-                    console.log(record.endDate)
-                    console.log(record.endDate?record.endDate:new Date())
-                    console.log(record.startDate)
-                    console.log(record.startDate?record.startDate:new Date())
-                    console.log(period)
-                    record.period = Math.round(period * 10) / 10
-                  }
-                  delete record['client'];
-                  delete record['client'];
-                  record.driverName = record.driver ? record.driver.nickName : undefined;
-                  delete record['driver'];
-                  return record;
-                })
-                return (new Response(true, { result, count, pageCount }, {}))
-              }
-              else if(result.length===0)
-                return (new Response(true, { result, count, pageCount }, {}))
-              else throw (
-                createError.NotFound({
-                  error: new Response(false, {}, "There is no orders"),
-                  code: SERVER_ERRORS.RECORDS_NOT_FOUND,
-                })
-              )
-            }).catch(error => {
-              throw (error)
-            })
+          const result = await model.findAll(type ? { ...options, where: { status: type } } : options).then(result => {
+            if (result.length) {
+              result = result.map(record => record.dataValues)
+              result = result.map(record => {
+                record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
+                record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
+                const period = ((record.endDate ? record.endDate : new Date()) - (record.startDate ? record.startDate : new Date())) / (1000 * 60)
+                console.log(record.endDate)
+                console.log(record.endDate ? record.endDate : new Date())
+                console.log(record.startDate)
+                console.log(record.startDate ? record.startDate : new Date())
+                console.log(period)
+                record.period = Math.round(period * 10) / 10
+                delete record['client'];
+                delete record['client'];
+                record.driverName = record.driver ? record.driver.nickName : undefined;
+                delete record['driver'];
+                return record;
+              })
+              return (new Response(true, { result, count, pageCount }, {}))
+            }
+            else if (result.length === 0)
+              return (new Response(true, { result, count, pageCount }, {}))
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "There is no orders"),
+                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
           resolve(result);
         } catch (error) {
           reject(error)
@@ -152,7 +150,7 @@ module.exports = {
             arrayError,
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
-          if(newRecord.distance) newRecord.points = parseInt(newRecord.distance/10, 10)+(newRecord.distance%10?1:0) 
+          if (newRecord.distance) newRecord.points = parseInt(newRecord.distance / 10, 10) + (newRecord.distance % 10 ? 1 : 0)
           const result = await model.update(newRecord, { where: { id } }).then(result => {
             if (result[0]) return (new Response(true, newRecord, {}))
             else throw (
@@ -175,7 +173,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let result = await model.update({driverId:newRecord.driverId}, { where: { id } }).then(result => {
+          let result = await model.update({ driverId: newRecord.driverId }, { where: { id } }).then(result => {
             if (result[0]) return (new Response(true, newRecord, {}))
             else throw (
               createError.NotFound({
