@@ -643,55 +643,55 @@ module.exports = {
       })()
     })
   },
-  findAppropriateDriver: async (order, blockedDrivers, client) => {
-    return new Promise((resolve, reject) => {
-      (async () => {
-        try {
-          let result = await model.findAll(
-            {
-              // attributes: ['id', 'firebaseToken'],
-              attributes: ['id', 'firebaseToken', 'latitude', 'longitude', [Sequelize.fn("COUNT", Sequelize.col("orders_notifications.id")), "count"]],
-              group: ['drivers.id'],
-              where: {
-                // firebaseToken: { [Op.ne]: null },
-                // id: { [Op.ne]: blockedDrivers },
-                // status: 1,
-                // transportType: order.transportType
-              },
-              // having: {
-              //   count: 0
-              // },
-              include: [{
-                attributes: [],
-                model: models.orders_notifications,
-                where: {
-                  status: 0
-                },
-                required: false
-              }]
-            }
-          ).then(result => {
-            if (result.length || result.length === 0) return result
-            else resolve()
-          }).catch(error => {
-            throw (error)
-          })
-          //resolve( result );
-          const distances = result.map(driver => {
-            const distance = calculateDistanse({ latitude: driver.latitude, longitude: driver.longitude }, { latitude: client.latitude, longitude: client.longitude })
-            return { driver, distance }
-          })
-          const shortDistance = distances.reduce((acc, val) => {
-            acc[0] = (acc[0] === undefined || val.distance < acc[0].distance) ? val : acc[0]
-            return acc;
-          }, []);
-          result = shortDistance[0].driver
-          console.log("Driver ID: ", result.id)
-          resolve({ firebaseToken: result.firebaseToken, id: result.id });
-        } catch (error) {
-          reject(error)
-        }
-      })()
-    })
-  },
+  // findAppropriateDriver: async (order, blockedDrivers, client) => {
+  //   return new Promise((resolve, reject) => {
+  //     (async () => {
+  //       try {
+  //         let result = await model.findAll(
+  //           {
+  //             // attributes: ['id', 'firebaseToken'],
+  //             attributes: ['id', 'firebaseToken', 'latitude', 'longitude', [Sequelize.fn("COUNT", Sequelize.col("orders_notifications.id")), "count"]],
+  //             group: ['drivers.id'],
+  //             where: {
+  //               // firebaseToken: { [Op.ne]: null },
+  //               // id: { [Op.ne]: blockedDrivers },
+  //               // status: 1,
+  //               // transportType: order.transportType
+  //             },
+  //             // having: {
+  //             //   count: 0
+  //             // },
+  //             include: [{
+  //               attributes: [],
+  //               model: models.orders_notifications,
+  //               where: {
+  //                 status: 0
+  //               },
+  //               required: false
+  //             }]
+  //           }
+  //         ).then(result => {
+  //           if (result.length || result.length === 0) return result
+  //           else resolve()
+  //         }).catch(error => {
+  //           throw (error)
+  //         })
+  //         //resolve( result );
+  //         const distances = result.map(driver => {
+  //           const distance = calculateDistanse({ latitude: driver.latitude, longitude: driver.longitude }, { latitude: client.latitude, longitude: client.longitude })
+  //           return { driver, distance }
+  //         })
+  //         const shortDistance = distances.reduce((acc, val) => {
+  //           acc[0] = (acc[0] === undefined || val.distance < acc[0].distance) ? val : acc[0]
+  //           return acc;
+  //         }, []);
+  //         result = shortDistance[0].driver
+  //         console.log("Driver ID: ", result.id)
+  //         resolve({ firebaseToken: result.firebaseToken, id: result.id });
+  //       } catch (error) {
+  //         reject(error)
+  //       }
+  //     })()
+  //   })
+  // },
 };

@@ -123,19 +123,19 @@ module.exports = {
       next(error);
     }
   },
-  getAppropriateDriver: async (req, res, next) => {
-    try {
-      const result = await services.findAppropriateDriver({transportType:0},[],
-        {
-          "latitude": 25.422095,
-          "longitude": 55.547906,
-        })
-      res.send(result)
-    } catch (error) {
-      console.log(error.message);
-      next(error);
-    }
-  },
+  // getAppropriateDriver: async (req, res, next) => {
+  //   try {
+  //     const result = await services.findAppropriateDriver({transportType:0},[],
+  //       {
+  //         "latitude": 25.422095,
+  //         "longitude": 55.547906,
+  //       })
+  //     res.send(result)
+  //   } catch (error) {
+  //     console.log(error.message);
+  //     next(error);
+  //   }
+  // },
   UploadImage: async (req, res, next) => {
     try {
       if (!req.file) throw createError(400, "Bad Image");

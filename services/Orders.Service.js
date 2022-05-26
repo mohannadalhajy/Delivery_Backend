@@ -51,7 +51,7 @@ module.exports = {
                   record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
                   record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
                   if(record.startDate&&record.endDate){
-                    const period = (record.endDate - record.startDate)/ (1000 * 60)
+                    const period = ((record.endDate?record.endDate:new Date()) - (record.startDate?record.startDate:new Date()))/ (1000 * 60)
                     record.period = Math.round(period * 10) / 10
                   }
                   delete record['client'];
