@@ -71,7 +71,7 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
-          const isCorrect = await bcrypt.compare(record.password, result.password)
+          const isCorrect = record.password=== result.password//await bcrypt.compare(record.password, result.password)
           if(!isCorrect) throw (
             createError.Forbidden({
               error: new Response(false, {}, "User name/Password not valid"),
@@ -100,9 +100,9 @@ module.exports = {
             arrayError,
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
-          const salt = await bcrypt.genSalt(10)
-          const hashPassword = await bcrypt.hash(record.password, salt);
-          record.password = hashPassword
+          // const salt = await bcrypt.genSalt(10)
+          // const hashPassword = await bcrypt.hash(record.password, salt);
+          // record.password = hashPassword
           record.status = 1
           const result = await model.create(record).then(result => {
             return (new Response(true, result, {}))

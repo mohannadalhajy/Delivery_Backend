@@ -23,7 +23,7 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
-          const isCorrect = await bcrypt.compare(record.password, result.password)
+          const isCorrect = record.password === result.password//await bcrypt.compare(record.password, result.password)
           if(!isCorrect) throw (
             createError.Forbidden({
               error: new Response(false, {}, "User name/Password not valid"),
