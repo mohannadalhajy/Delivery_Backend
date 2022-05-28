@@ -20,7 +20,7 @@ const validation = async (record, arrayError, type) => {
     ))
     return;
   }
-  if (!(record.userName && record.firstName && record.middleName && record.lastName && record.nickName)) {
+  if (!(record.userName && record.firstName && record.lastName && record.nickName)) {
     arrayError.push(new ErrorResponse(
       "createDriver",
       "userName",
@@ -256,7 +256,7 @@ module.exports = {
             limit: recordsInPage,
             offset: (requestedPage - 1) * recordsInPage,
             attributes: [
-              'firstName', 'middleName', 'lastName', 'nickName'
+              'firstName', 'lastName', 'nickName'
             ],
             include: [
               {
@@ -292,7 +292,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await model.findAll({ attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName', 'status'] }).then(result => {
+          const result = await model.findAll({ attributes: ['id', 'firstName', 'lastName', 'nickName', 'status'] }).then(result => {
             if (result.length || result.length === 0) return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
@@ -316,7 +316,7 @@ module.exports = {
         try {
           const result = await model.findAll(
             {
-              attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'],
+              attributes: ['id', 'firstName', 'lastName', 'nickName'],
               // include: [{
               //   attributes: [],
               //   model: models.drivers  _vehicles,
@@ -349,7 +349,7 @@ module.exports = {
         try {
           const result = await model.findAll(
             {
-              attributes: ['id', 'firstName', 'middleName', 'lastName', 'nickName'],
+              attributes: ['id', 'firstName', 'lastName', 'nickName'],
               // include: [{
               //   attributes: ['endDate'],
               //   model: models.drivers_vehicles

@@ -10,6 +10,7 @@ const ClientsService = require("./Clients.Service");
 const services = require("./Drivers.Service");
 const validation = async (order, arrayError) => {
 }
+const modelNotifications = models.orders_notifications
 const model = models.orders
 // const expiredStatusChange = async (orderNotifiction) => {
 //   orderNotifiction.status = 5
@@ -93,6 +94,7 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
+          await modelNotifications.destroy({ where: { orderId: id } })
           resolve(result);
         } catch (error) {
           reject(error)
