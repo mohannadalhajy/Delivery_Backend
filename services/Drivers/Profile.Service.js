@@ -35,6 +35,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
+          console.log("kkkkk")
+          console.log(body)
           let record = await models.drivers.findByPk(id).then(result => {
             if (result) return result
           }).catch(error => {
