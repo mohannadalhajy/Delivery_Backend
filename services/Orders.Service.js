@@ -226,7 +226,7 @@ module.exports = {
           console.log(users)
           let tokens = users.map(user=>user.firebaseToken)
           console.log("usersusers2")
-          if(tokens.length) tokens = tokens.filter(user=>firebaseToken)
+          if(tokens.length) tokens = tokens.filter(firebaseToken=>firebaseToken)
           console.log("usersusers3")
           console.log(tokens)
           if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
