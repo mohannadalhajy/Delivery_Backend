@@ -221,6 +221,8 @@ module.exports = {
             throw (error)
           })
           const users = await usersServices.getAll()
+          console.log("usersusers")
+          console.log(users)
           // let tokens = users.map(user=>user.firebaseToken)
           // if(tokens.length) tokens = tokens.filter(user=>user.firebaseToken)
           // if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
