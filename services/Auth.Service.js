@@ -33,7 +33,7 @@ module.exports = {
           )
           if (record.firebaseToken) {
             result.firebaseToken = record.firebaseToken
-            await models.users.update(result, { where: { id: result.id } }).then(result => {
+            await models.users.update(result, { where: { id: result.id } }).then(newRecord => {
               if (result[0]) return (new Response(true, newRecord, {}))
               else throw (
                 createError.NotFound({
