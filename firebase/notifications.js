@@ -50,7 +50,7 @@ module.exports = {
     //   console.error(error);
     // }
   },
-  sendNewOrderNotificationToAdmins: async (tokens, orderId) => {
+  sendNewOrderNotificationToAdmins: async (tokens) => {
     // if (!Expo.isExpoPushToken(token)) {
     //   console.error(`Push token ${token} is not a valid Expo push token`);
     // }
@@ -63,7 +63,7 @@ module.exports = {
         title: "Order",
         body: "New Order",
         NOTIFY_TYPE: module.exports.NOTIFY_TYPES().NEW_ORDER,
-        offer_id: orderId.toString(),
+        offer_id: module.exports.NOTIFY_TYPES().NEW_ORDER,
       },
       tokens: tokens
     };
