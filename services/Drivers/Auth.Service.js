@@ -59,8 +59,7 @@ module.exports = {
             {
               userName:record.userName
             },
-            attributes:['id','userName', 'status', 'password'],
-            raw: true
+            attributes:['id','userName', 'status', 'password']
           }).then(result=>{
             if(!result) throw (
               createError.NotFound({

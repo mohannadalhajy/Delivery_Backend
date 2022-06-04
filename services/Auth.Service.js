@@ -12,7 +12,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let result = await models.users.findOne({ where: { userName: record.userName } }).then(result => {
+          let result = await models.users.findOne({ where: { userName: record.userName },
+            raw: true }).then(result => {
             if (!result) throw (
               createError.NotFound({
                 error: new Response(false, {}, "User is not found"),
