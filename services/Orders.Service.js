@@ -220,13 +220,14 @@ module.exports = {
             console.log(error)
             throw (error)
           })
-          const users = await usersServices.getAll()
+          let users = await usersServices.getAll()
+          users = users?users.result:undefined
           console.log("usersusers")
           console.log(users)
-          // let tokens = users.map(user=>user.firebaseToken)
-          // if(tokens.length) tokens = tokens.filter(user=>user.firebaseToken)
-          // if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
-          // // module.exports.updateDriver(order.id, {driverId:1})
+          let tokens = users.map(user=>user.firebaseToken)
+          if(tokens.length) tokens = tokens.filter(user=>user.firebaseToken)
+          if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
+          // module.exports.updateDriver(order.id, {driverId:1})
           //module.exports.processDeliveryOrder(order)
           resolve(new Response(true, order, {}));
         } catch (error) {

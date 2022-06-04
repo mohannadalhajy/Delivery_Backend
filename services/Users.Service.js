@@ -40,7 +40,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await models.users.findAll({}).then(result => {
+          const result = await models.users.findAll({raw: true}).then(result => {
             if (result.length||result.length===0) return (new Response(true, result, {}))
             else throw (
               createError.NotFound({
