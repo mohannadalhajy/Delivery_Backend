@@ -222,15 +222,9 @@ module.exports = {
           })
           let users = await usersServices.getAll()
           users = users?users.result:undefined
-          console.log("usersusers1")
-          console.log(users)
           let tokens = users.map(user=>user.firebaseToken)
-          console.log("usersusers2")
           if(tokens.length) tokens = tokens.filter(firebaseToken=>firebaseToken)
-          console.log("usersusers3")
-          console.log(tokens)
           if(tokens.length) await sendNewOrderNotificationToAdmins(tokens)
-          console.log("usersusers4")
           // module.exports.updateDriver(order.id, {driverId:1})
           //module.exports.processDeliveryOrder(order)
           resolve(new Response(true, order, {}));
