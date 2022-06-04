@@ -36,7 +36,7 @@ module.exports = {
             console.log("resultresult")
             console.log(result)
             await models.users.update(result, { where: { id: result.id } }).then(newRecord => {
-              if (result[0]) return new Response(true, newRecord, {})
+              if (newRecord) return new Response(true, newRecord, {})
               else throw (
                 createError.NotFound({
                   error: new Response(false, {}, "error in update firebase"),
