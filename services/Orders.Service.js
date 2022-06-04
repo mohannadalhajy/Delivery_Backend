@@ -228,6 +228,7 @@ module.exports = {
           console.log("usersusers2")
           if(tokens.length) tokens = tokens.filter(user=>firebaseToken)
           console.log("usersusers3")
+          console.log(tokens)
           if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
           console.log("usersusers4")
           // module.exports.updateDriver(order.id, {driverId:1})
