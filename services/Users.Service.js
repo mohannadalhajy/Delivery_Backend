@@ -36,14 +36,11 @@ module.exports = {
       })()
     })
   },
-  getAll: async (requestedPage, recordsInPage) => {
+  getAll: async () => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await models.users.findAll({
-            limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage
-          }).then(result => {
+          const result = await models.users.findAll({}).then(result => {
             if (result.length||result.length===0) return (new Response(true, result, {}))
             else throw (
               createError.NotFound({

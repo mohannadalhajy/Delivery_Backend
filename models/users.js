@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   users.init({
     userName: DataTypes.TEXT,
     password: DataTypes.TEXT,
-    role: DataTypes.TEXT
+    role: DataTypes.TEXT,
+    firebaseToken: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'users',

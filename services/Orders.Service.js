@@ -2,12 +2,12 @@ const createError = require("http-errors");
 const models = require("../models");
 const { Response } = require("../helpers/Response.Helper");
 const SERVER_ERRORS = require("../helpers/ServerErrors.Helper");
-const { sendNewOrderNotification } = require("../firebase/notifications");
+const { sendNewOrderNotification, sendNewOrderNotificationToAdmins } = require("../firebase/notifications");
 // const { findAppropriateDriver } = require("./Drivers.Service");
 const NotificationsService = require("./Notifications.Service");
 const Op = require('sequelize').Op;
-const ClientsService = require("./Clients.Service");
 const services = require("./Drivers.Service");
+const usersServices = require("./Users.Service");
 const validation = async (order, arrayError) => {
 }
 const modelNotifications = models.orders_notifications
@@ -220,6 +220,10 @@ module.exports = {
             console.log(error)
             throw (error)
           })
+          const users = await usersServices.getAll()
+          let tokens = users.map(user=>user.firebaseToken)
+          if(tokens.length) tokens = tokens.filter(user=>user.firebaseToken)
+          if(tokens.length) await sendNewOrderNotificationToAdmins(tokens, notificationId)
           // module.exports.updateDriver(order.id, {driverId:1})
           //module.exports.processDeliveryOrder(order)
           resolve(new Response(true, order, {}));

@@ -12,8 +12,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const result = await models.users.findOne({where:{userName:record.userName}}).then(result=>{
-            if(!result) throw (
+          let result = await models.users.findOne({ where: { userName: record.userName } }).then(result => {
+            if (!result) throw (
               createError.NotFound({
                 error: new Response(false, {}, "User is not found"),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
@@ -24,13 +24,27 @@ module.exports = {
             throw (error)
           })
           const isCorrect = await bcrypt.compare(record.password, result.password)
-          if(!isCorrect) throw (
+          if (!isCorrect) throw (
             createError.Forbidden({
               error: new Response(false, {}, "User name/Password not valid"),
               code: SERVER_ERRORS.RECORD_NOT_FOUND,
             })
           )
-          const user = {"userName": result.userName,"id": result.id, role: result.role}
+          if (record.firebaseToken) {
+            result.firebaseToken = record.firebaseToken
+            await models.users.update(result, { where: { id: result.id } }).then(result => {
+              if (result[0]) return (new Response(true, newRecord, {}))
+              else throw (
+                createError.NotFound({
+                  error: new Response(false, {}, "User not found"),
+                  code: SERVER_ERRORS.RECORD_NOT_FOUND,
+                })
+              )
+            }).catch(error => {
+              throw (error)
+            })
+          }
+          const user = { "userName": result.userName, "id": result.id, role: result.role }
           const accessToken = await signAccessToken(user)
           resolve(new Response(true, { accessToken, user }));
         } catch (error) {
