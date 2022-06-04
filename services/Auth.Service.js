@@ -33,11 +33,13 @@ module.exports = {
           )
           if (record.firebaseToken) {
             result.firebaseToken = record.firebaseToken
+            console.log("resultresult")
+            console.log(result)
             await models.users.update(result, { where: { id: result.id } }).then(newRecord => {
-              if (result[0]) return (new Response(true, newRecord, {}))
+              if (result[0]) return new Response(true, newRecord, {})
               else throw (
                 createError.NotFound({
-                  error: new Response(false, {}, "User not found"),
+                  error: new Response(false, {}, "error in update firebase"),
                   code: SERVER_ERRORS.RECORD_NOT_FOUND,
                 })
               )
