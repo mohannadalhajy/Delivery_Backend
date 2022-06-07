@@ -366,8 +366,8 @@ module.exports = {
             })
           let pageCount = Math.ceil(count / recordsInPage);
           const result = await model.findAll({
-            limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage
+            // limit: recordsInPage,
+            // offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
             if (result.length || result.length === 0) return (new Response(true, { result, pageCount, count }, {}))
             else throw (
@@ -390,7 +390,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const count = await models.orders.count({ clientId: id })
           const result = await model.findAll({
             where: { id },
             include: [{
@@ -401,17 +400,17 @@ module.exports = {
               limit: recordsInPage,
               offset: (requestedPage - 1) * recordsInPage
             }],
-            // limit: recordsInPage,
-            // offset: (requestedPage - 1) * recordsInPage
           }).then(result => {
-            let orders = result.length?result[0].orders:[]
+            const count = result.length
+            let orders = count?result[0].orders:[]
             orders = orders.map(record => record.dataValues).map(order => {
               order.driverName = order.driver ? order.driver.nickName : undefined;
               delete order['driver'];
               return order;
             })
             let pageCount = Math.ceil(count / recordsInPage);
-            if (result.length || result.length === 0) return (new Response(true, { result: orders, pageCount, count }, {}))
+            if (result.length || result.length === 0) 
+            return (new Response(true, { result: orders, pageCount, count }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),
