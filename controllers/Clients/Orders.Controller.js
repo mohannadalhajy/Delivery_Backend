@@ -24,19 +24,19 @@ module.exports = {
       if (req.payload && req.payload.user) {
         const id = req.payload.user.id;
         record.clientId = id;
-          const models = require("../models");
-          const clientsModel = models.clients
-          let client = await clientsModel.findByPk(id, { raw: true }).then(result => {
-          if (result) return true//(new Response(true, result, {}))
-          else throw (
-            createError.NotFound({
-              error: new Response(false, {}, "Client not found"),
-              code: SERVER_ERRORS.RECORD_NOT_FOUND,
-            })
-          )
-        }).catch(error => {
-          throw (error)
-        })
+        // const models = require("../models");
+        // const clientsModel = models.clients
+      //   let client = await clientsModel.findByPk(id, { raw: true }).then(result => {
+      //     if (result) return true//(new Response(true, result, {}))
+      //     else throw (
+      //       createError.NotFound({
+      //         error: new Response(false, {}, "Client not found"),
+      //         code: SERVER_ERRORS.RECORD_NOT_FOUND,
+      //       })
+      //     )
+      //   }).catch(error => {
+      //     throw (error)
+      //   })
       }
       else throw (
         createError.NotFound({
