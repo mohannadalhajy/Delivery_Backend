@@ -22,6 +22,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 //Get a list of all KeyWords
 router.post("/", verifyAccessToken, controller.add);
+router.get("/daily", verifyAccessToken, controller.getAllDaily);
 router.get("/", verifyAccessToken, controller.getAll);
 router.delete("/:id", verifyAccessToken, controller.delete);
 router.patch("/driver/:id", verifyAccessToken, controller.updateDriver);

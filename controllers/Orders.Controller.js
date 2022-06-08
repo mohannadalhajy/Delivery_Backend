@@ -3,6 +3,15 @@ const { Response } = require("../helpers/Response.Helper");
 const services = require("../services/Orders.Service");
 
 module.exports = {
+  getAllDaily: async (req, res, next) => {
+    try {
+      const result = await services.getAllDaily()
+      res.send(result)
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
   getAll: async (req, res, next) => {
     try {
       let requestedPage = req.query.page;

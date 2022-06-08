@@ -79,6 +79,69 @@ module.exports = {
       })()
     })
   },
+  getAllDaily: async () => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          const date = new Date()
+          const day = date.getDate()
+          const month = date.getMonth()
+          let pageCount = 1;
+          const options = {
+            include: [{
+              model: models.clients,
+              attributes: ['companyNameEnglish', 'companyNameArabic']
+            },
+            {
+              model: models.drivers,
+              attributes: ['nickName']
+            }],
+            order: [
+              ['id', 'DESC']
+            ]
+          }
+          const result = await model.findAll(options).then(result => {
+            if (result.length) {
+              result = result.map(record => record.dataValues)
+              result = result.map(record => {
+                record.companyNameEnglish = record.client ? record.client.companyNameEnglish : undefined;
+                record.companyNameArabic = record.client ? record.client.companyNameArabic : undefined;
+                const period = ((record.endDate ? record.endDate : new Date()) - (record.startDate ? record.startDate : new Date())) / (1000 * 60)
+                record.period = Math.round(period * 10) / 10
+                delete record['client'];
+                delete record['client'];
+                record.driverName = record.driver ? record.driver.nickName : undefined;
+                delete record['driver'];
+                return record;
+              })
+              result = result.filter(record=>{
+                const recordDate = record.startDate
+                const recordDay = recordDate.getDate()
+                if(day !== recordDay) return false
+                const recordMonth = recordDate.getMonth()
+                if(month !== recordMonth) return false
+                return true
+              })
+              return (new Response(true, { result, count: result.length, pageCount }, {}))
+            }
+            else if (result.length === 0)
+              return (new Response(true, { result, count: result.length, pageCount }, {}))
+            else throw (
+              createError.NotFound({
+                error: new Response(false, {}, "There is no orders"),
+                code: SERVER_ERRORS.RECORDS_NOT_FOUND,
+              })
+            )
+          }).catch(error => {
+            throw (error)
+          })
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
   delete: async (id) => {
     return new Promise((resolve, reject) => {
       (async () => {
