@@ -210,7 +210,7 @@ module.exports = {
             arrayError,
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
-          if (newRecord.distance) newRecord.points = parseInt(newRecord.distance / 10, 10) + (newRecord.distance % 10 ? 1 : 0)
+          if (newRecord.distance&&!newRecord.points) newRecord.points = parseInt(newRecord.distance / 10, 10) + (newRecord.distance % 10 ? 1 : 0)
           const result = await model.update(newRecord, { where: { id } }).then(result => {
             if (result[0]) return (new Response(true, newRecord, {}))
             else throw (

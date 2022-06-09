@@ -12,8 +12,9 @@ module.exports = {
   },
   updatePassword: async (req, res, next) => {
     try {
+      const id = req.payload.user.id;
       const record = req.body
-      const result = await services.updatePassword(record)
+      const result = await services.updatePassword(id, record)
       res.send(result)
     } catch (error) {
       console.log(error.message);
