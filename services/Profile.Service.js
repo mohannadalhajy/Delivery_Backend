@@ -76,10 +76,10 @@ module.exports = {
           record.password = hashPassword
           user.password = hashPassword;
           const result = await models.users.update(user, { where: { id } }).then(result => {
-            if (result[0]) return (new Response(true, newRecord, {}))
+            if (result[0]) return (new Response(true, user, {}))
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "User not found"),
+                error: new Response(false, {}, "User not found."),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
