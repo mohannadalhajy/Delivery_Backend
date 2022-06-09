@@ -34,7 +34,7 @@ module.exports = {
       (async () => {
         try {
           const { oldPassword, newPassword } = record;
-          const user = await models.users.findByPk(id).then(result => {
+          const user = await models.users.findByPk(id, { raw: true }).then(result => {
             if (result) return result
             else throw (
               createError.NotFound({
@@ -74,8 +74,6 @@ module.exports = {
           const salt = await bcrypt.genSalt(10)
           const hashPassword = await bcrypt.hash(newPassword, salt);
           user.password = hashPassword;
-          console.log(user)
-          console.log(id)
           const result = await models.users.update(user, { where: { id } }).then(result => {
             if (result[0]) return (new Response(true, user, {}))
             else throw (
