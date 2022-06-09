@@ -75,7 +75,7 @@ module.exports = {
           const hashPassword = await bcrypt.hash(newPassword, salt);
           record.password = hashPassword
           user.password = hashPassword;
-          const result = await models.users.update(user, { where: { id } }).then(result => {
+          const result = await models.users.update(user, { where: { id: Number(id) } }).then(result => {
             if (result[0]) return (new Response(true, user, {}))
             else throw (
               createError.NotFound({
