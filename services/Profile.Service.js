@@ -79,7 +79,7 @@ module.exports = {
             if (result[0]) return (new Response(true, user, {}))
             else throw (
               createError.NotFound({
-                error: new Response(false, {}, "User not found."),
+                error: new Response(false, {}, "User not found."+result),
                 code: SERVER_ERRORS.RECORD_NOT_FOUND,
               })
             )
