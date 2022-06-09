@@ -24,7 +24,8 @@ const getOrder = async (id) => {
 
 const calcPoints = (order) => {
   let points = 1
-  if (order.transportType) points = 2
+  if (order.emirate>0) points = points*2 
+  if (order.transportType) points = points*2
   return points
 }
 const acceptStatusChange = async (order, orderNotifiction) => {

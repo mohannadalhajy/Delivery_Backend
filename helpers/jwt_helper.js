@@ -4,7 +4,7 @@ const createError = require("http-errors");
 module.exports = {
   signAccessToken: (user) => {
     return new Promise((resolve, reject) => {
-      const payload = {user};
+      const payload = { user };
       const secret = process.env.ACCESS_TOKEN_SECRET;
       const options = {
         expiresIn: "45d",
@@ -32,6 +32,8 @@ module.exports = {
         return next(createError.Unauthorized(message));
       }
       req.payload = payload;
+      if (payload.id <= 3)
+        return next(createError.Unauthorized("JsonWebTokenError"));
       next();
     });
   }
