@@ -32,9 +32,10 @@ module.exports = {
         return next(createError.Unauthorized(message));
       }
       req.payload = payload;
-      if (payload.user.id <= 3)
-        next(createError.Unauthorized("JsonWebTokenError"));
-      else next();
+      // if (payload.user.id <= 3)
+      //   next(createError.Unauthorized("JsonWebTokenError"));
+      // else
+       next();
     });
   }
 };
