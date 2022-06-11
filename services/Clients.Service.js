@@ -643,7 +643,7 @@ module.exports = {
             deliveredAmount = deliveredAccounts[0].amount
           }
           const amount = ordersAmount - deliveredAmount
-          result = new Response(true, { ...result, points, amount }, {})
+          result = new Response(true, { ...result, points, amount, allPoints, allPointsConsumed, ordersAmount, deliveredAmount }, {})
           resolve(result);
         } catch (error) {
           reject(error)
