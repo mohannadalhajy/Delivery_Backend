@@ -7,6 +7,7 @@ const NotificationsService = require("../Notifications.Service");
 const OrderService = require("../Orders.Service");
 const { sendCancelOrderNotification, sendNewOrderNotification } = require("../../firebase/notifications");
 const { updateStatus } = require("./Profile.Service");
+const { findBaseById } = require("../Clients.Service");
 // const { processDeliveryOrder } = require("../Orders.Service");
 const model = models.orders
 const getNotification = async (id) => {
@@ -23,8 +24,10 @@ const getOrder = async (id) => {
 }
 
 const calcPoints = (order) => {
+  console.log("order",order)
+  const client = await findBaseById(order.clientId)
   let points = 1
-  if (order.emirate>0) points = points*2 
+  if (order.emirate!=client.emirate) points = points*2 
   if (order.transportType) points = points*2
   return points
 }
@@ -140,8 +143,8 @@ module.exports = {
               ['id', 'orderId'],
               'amount',
               'transportType',
-              'addressEnglish',
-              'addressArabic',
+              // 'addressEnglish',
+              // 'addressArabic',
               'emirate',
               'location'],
             include: [{
@@ -150,8 +153,8 @@ module.exports = {
                 'emirate',
                 'companyNameEnglish',
                 'companyNameArabic',
-                'addressEnglish',
-                'addressArabic',
+                // 'addressEnglish',
+                // 'addressArabic',
                 'companyTypeEnglish',
                 'companyTypeArabic',
                 'companyPhone',
@@ -162,7 +165,7 @@ module.exports = {
               model: models.customers,
               attributes: [
                 'nameEnglish',
-                'nameArabic',
+                ['nameEnglish', 'nameArabic'],
                 'phone']
             }],
           }).then(result => {

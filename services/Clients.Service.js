@@ -651,6 +651,22 @@ module.exports = {
       })()
     })
   },
+  findBaseById: async (id) => {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          let result = await model.findByPk(id, { raw: true }).then(result => {
+            return result//(new Response(true, result, {}))
+          }).catch(error => {
+            throw (error)
+          })
+          resolve(result);
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  },
   getPointsAndAmount: async (id) => {
     return new Promise((resolve, reject) => {
       (async () => {
