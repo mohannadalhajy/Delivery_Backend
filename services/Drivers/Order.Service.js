@@ -7,6 +7,7 @@ const NotificationsService = require("../Notifications.Service");
 const OrderService = require("../Orders.Service");
 const { sendCancelOrderNotification, sendNewOrderNotification } = require("../../firebase/notifications");
 const { updateStatus } = require("./Profile.Service");
+const { findBaseById } = require("../Clients.Service");
 // const { processDeliveryOrder } = require("../Orders.Service");
 const model = models.orders
 const getNotification = async (id) => {
@@ -22,9 +23,11 @@ const getOrder = async (id) => {
   return result.result
 }
 
-const calcPoints = (order) => {
+const calcPoints = async (order) => {
+  console.log("order",order)
+  const client = await findBaseById(order.clientId)
   let points = 1
-  if (order.emirate>0) points = points*2 
+  if (client && order.emirate!=client.emirate) points = points*2 
   if (order.transportType) points = points*2
   return points
 }
@@ -41,7 +44,7 @@ const cancelStatusChange = async (order, orderNotifictions) => {
   order.status = 1
   order.endDate = new Date()
   if (order.status === 2) {
-    const points = calcPoints(order)
+    const points = await calcPoints(order)
     order.points = points
   }
   else order.points = 0
@@ -68,7 +71,7 @@ const editedStatusChange = async (order, orderNotifiction, editedReason) => {
   order.reason = editedReason
   order.amountReceived = 0
   order.endDate = new Date()
-  const points = calcPoints(order)
+  const points = await calcPoints(order)
   order.points = points
   await updateStatus(orderNotifiction.driverId, 1)
   await order.save()
@@ -99,7 +102,7 @@ const deliveredStatusChange = async (order, orderNotifiction) => {
   orderNotifiction.status = 3
   orderNotifiction.deliveredDate = new Date()
   order.endDate = new Date()
-  const points = calcPoints(order)
+  const points = await calcPoints(order)
   order.points = points
   await order.save()
   if (orderNotifiction.driverId)
