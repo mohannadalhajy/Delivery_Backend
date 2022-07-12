@@ -1,5 +1,5 @@
-const Emirates = ["AD", "AJM", "FUJ", "SHJ", "DUBAI", "RAK", "UQ", "AIN","WEST"]
-const ORDER_EMIRATES = ["AJM", "SHJ", "DUBAI", "UQ"]
+const Emirates = ["AD", "AJM", "FUJ", "SHJ", "DUBAI", "Muwailih", "RAK", "UQ", "AIN","WEST"]
+const ORDER_EMIRATES = ["AJM", "SHJ", "DUBAI", "UQ", "Muwailih"]
 const ORDER_TYPES = ["Internal","External","Purchase order"]
 const TRANSPORT_TYPES = ["Bike","Car"]
 const VEHICLES_SERVICE_TYPES = ["Owning","Rent"]
