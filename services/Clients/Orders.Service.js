@@ -1,39 +1,14 @@
 const createError = require("http-errors");
 const models = require("../../models");
-const { Response } = require("../../helpers/Response.Helper");
 const SERVER_ERRORS = require("../../helpers/ServerErrors.Helper");
-const { getRecordsCountInPage } = require("../../helpers/Constants");
 
 const model = models.orders
 module.exports = {
-  getAll: async (requestedPage, recordsInPage, clientId) => {
+  getAll: async (clientId) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          if (!(requestedPage == null || requestedPage <= 0)) requestedPage = parseInt(requestedPage)
-          if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
-          recordsInPage = parseInt(recordsInPage)
-          let count = await model.count({where:{clientId}})
-            .then(counter => { return counter }).catch(error => {
-              throw (error)
-            })
-          let pageCount = Math.ceil(count / requestedPage?recordsInPage:1);
-          const options = requestedPage?{
-            where:{clientId},
-            include: [{
-              model: models.clients,
-              attributes: ['companyNameEnglish', 'companyNameArabic']
-            },{
-              model: models.customers,
-              attributes: ['nameEnglish', 'nameArabic']
-            }
-          ],
-            limit: recordsInPage,
-            offset: (requestedPage - 1) * recordsInPage,
-            order: [
-              ['id', 'DESC']
-            ]
-          }:{
+          const options = {
             where:{clientId},
             include: [{
               model: models.clients,
@@ -58,10 +33,10 @@ module.exports = {
                 delete record['customer'];
                 return record;
               })
-              return (new Response(true, { result, count, pageCount }, {}))
+              return (new Response(true, { result }, {}))
             }
             else if(result.length===0)
-              return (new Response(true, { result, count, pageCount }, {}))
+              return (new Response(true, { result }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),

@@ -8,10 +8,8 @@ const SERVER_ERRORS = require("../../helpers/ServerErrors.Helper");
 module.exports = {
   getAll: async (req, res, next) => {
     try {
-      let requestedPage = req.query.page;
-      let recordsInPage = req.query.take;
       const clientId = req.payload.user.id;
-      const result = await services.getAll(requestedPage, recordsInPage, clientId)
+      const result = await services.getAll(clientId)
       res.send(result)
     } catch (error) {
       console.log(error.message);
