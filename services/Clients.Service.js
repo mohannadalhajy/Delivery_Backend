@@ -386,7 +386,7 @@ module.exports = {
       })()
     })
   },
-  getOrders: async (requestedPage, recordsInPage, id) => {
+  getOrders: async (id) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
@@ -397,8 +397,6 @@ module.exports = {
               include: [{
                 model: models.drivers
               }],
-              limit: recordsInPage,
-              offset: (requestedPage - 1) * recordsInPage
             }],
           }).then(result => {
             const count = result.length
@@ -408,9 +406,8 @@ module.exports = {
               delete order['driver'];
               return order;
             })
-            let pageCount = Math.ceil(count / recordsInPage);
             if (result.length || result.length === 0) 
-            return (new Response(true, { result: orders, pageCount, count }, {}))
+            return (new Response(true, { result: orders }, {}))
             else throw (
               createError.NotFound({
                 error: new Response(false, {}, "There is no orders"),

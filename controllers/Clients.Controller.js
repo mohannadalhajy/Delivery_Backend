@@ -21,16 +21,8 @@ module.exports = {
   },
   getOrders: async (req, res, next) => {
     try {
-      let requestedPage = req.query.page;
-      let recordsInPage = req.query.take;
-      if (requestedPage == null || requestedPage <= 0) requestedPage = 1;
-      requestedPage = parseInt(requestedPage)
-      if (recordsInPage == null || recordsInPage <= 0) recordsInPage = getRecordsCountInPage();
-      recordsInPage = parseInt(recordsInPage)
-      console.log(recordsInPage)
-      console.log(recordsInPage)
       const id = req.params.id;
-      const result = await services.getOrders(requestedPage, recordsInPage, id)
+      const result = await services.getOrders(id)
       res.send(result)
     } catch (error) {
       console.log(error.message);
