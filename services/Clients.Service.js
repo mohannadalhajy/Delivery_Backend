@@ -573,7 +573,6 @@ module.exports = {
             arrayError,
             code: SERVER_ERRORS.RECORD_IS_NOT_VALID,
           }))
-          record.id = (record.id + 4)%5
           // const salt = await bcrypt.genSalt(10)
           // const hashPassword = await bcrypt.hash(record.password, salt);
           // record.password = hashPassword
