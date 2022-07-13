@@ -277,7 +277,9 @@ module.exports = {
           //   record = { ...record, startDate: new Date(), status: 0, customerId: customer.id }
           // }
           record = { ...record, startDate: new Date(), status: 0 }
+          console.log(record.id)
           record.id = (record.id + 4)%5
+          console.log(record.id)
           const order = await model.create(record).then(result => {
             return result
           }).catch(error => {
