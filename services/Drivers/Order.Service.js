@@ -187,6 +187,7 @@ module.exports = {
           var result = {};
           for (var attrname in notification.dataValues) { result[attrname] = notification.dataValues[attrname]; }
           for (var attrname in order.dataValues) { result[attrname] = order.dataValues[attrname]; }
+          console.log("hhhhh", result.emirate)
           resolve(new Response(true, result, {}));
         } catch (error) {
           reject(error)
