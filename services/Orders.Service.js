@@ -279,6 +279,7 @@ module.exports = {
           record = { ...record, startDate: new Date(), status: 0 }
           console.log("gggggggg",record.emirate)
           record.emirate = (Number(record.emirate) + 4)%5
+          if(record.emirate===4) record.emirate = 1
           console.log("gggggggg",record.emirate)
           const order = await model.create(record).then(result => {
             return result
