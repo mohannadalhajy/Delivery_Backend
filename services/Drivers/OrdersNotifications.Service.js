@@ -34,10 +34,17 @@ module.exports = {
             if (result.length || result.length === 0) {
               result = result.map(record => {
                 // record = record.dataValues
-                record.companyNameEnglish = record['order.client.companyNameEnglish']
-                record.companyNameArabic = record['order.client.companyNameArabic']
-                record.date = record['order.startDate'].toISOString().split('T')[0]
-                record.amount = record['order.amountReceived']
+                record.id = record.id?record.id:""
+                record.orderId = record.orderId?record.orderId:""
+                record.status = record.status?record.status:""
+                record.companyNameEnglish = record['order.client.companyNameEnglish'] ?
+                  record['order.client.companyNameEnglish'] : ""
+                record.companyNameArabic = record['order.client.companyNameArabic'] ?
+                  record['order.client.companyNameArabic'] : ""
+                record.date = record['order.startDate'].toISOString().split('T')[0] ?
+                  record['order.startDate'].toISOString().split('T')[0] : ""
+                record.amount = record['order.amountReceived'] ?
+                  record['order.amountReceived'] : ""
                 delete record["order.id"]
                 delete record["order.amountReceived"]
                 delete record["order.client.id"]
@@ -74,7 +81,7 @@ module.exports = {
             if (result) {
               return (new Response(true, result, {}))
             }
-            else 
+            else
               return (new Response(false, {}, "Notification not found"))
             // throw (
             //   createError.NotFound({
