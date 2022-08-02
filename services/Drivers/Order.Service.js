@@ -136,6 +136,7 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
+          console.log("hhhhhh", notification)
           if (!notification)
             resolve(new Response(false, {}, "Notification not found"));
           const order = await model.findByPk(notification.orderId, {
@@ -181,6 +182,7 @@ module.exports = {
           }).catch(error => {
             throw (error)
           })
+          console.log("hhhhhhoder:", order)
           if (!order)
             resolve(new Response(false, {}, "Order not found"));
           delete notification.orderId
