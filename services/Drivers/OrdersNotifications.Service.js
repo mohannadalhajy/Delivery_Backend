@@ -43,8 +43,7 @@ module.exports = {
                   record['order.client.companyNameArabic'] : ""
                 record.date = record['order.startDate'].toISOString().split('T')[0] ?
                   record['order.startDate'].toISOString().split('T')[0] : ""
-                record.amount = record['order.amountReceived'] ?
-                  record['order.amountReceived'] : null
+                record.amount = record['order.amountReceived']
                 delete record["order.id"]
                 delete record["order.amountReceived"]
                 delete record["order.client.id"]
