@@ -36,13 +36,10 @@ module.exports = {
                 // record = record.dataValues
                 record.id = record.id?record.id:""
                 record.orderId = record.orderId?record.orderId:""
-                record.status = record.status?record.status:""
-                record.companyNameEnglish = record['order.client.companyNameEnglish'] ?
-                  record['order.client.companyNameEnglish'] : ""
-                record.companyNameArabic = record['order.client.companyNameArabic'] ?
-                  record['order.client.companyNameArabic'] : ""
-                record.date = record['order.startDate'].toISOString().split('T')[0] ?
-                  record['order.startDate'].toISOString().split('T')[0] : ""
+                record.status = record.status
+                record.companyNameEnglish = record['order.client.companyNameEnglish']
+                record.companyNameArabic = record['order.client.companyNameArabic']
+                record.date = record['order.startDate'].toISOString().split('T')[0]
                 record.amount = record['order.amountReceived']
                 delete record["order.id"]
                 delete record["order.amountReceived"]
